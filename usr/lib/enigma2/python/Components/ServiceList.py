@@ -67,7 +67,7 @@ class ServiceList(HTMLComponent, GUIComponent):
 		GUIComponent.__init__(self)
 
 		self._componentSizes = componentSizes[componentSizes.SERVICE_LIST]
-		Log.i(self._componentSizes)
+		Log.d(self._componentSizes)
 		tlf = TemplatedListFonts()
 
 		upper_service_name_limit = self.getDesktopWith() // 3

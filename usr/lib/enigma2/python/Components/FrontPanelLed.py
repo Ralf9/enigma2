@@ -93,7 +93,7 @@ class FrontPanelLed(object):
 			return
 		with open(path, 'w') as f:
 			value = "%x" %(value)
-			Log.w(value)
+			Log.d(value)
 			f.write(value)
 
 	# 8 bit brightness

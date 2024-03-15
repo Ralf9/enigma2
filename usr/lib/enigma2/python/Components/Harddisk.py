@@ -18,7 +18,7 @@ class Util:
 		try:
 			return open(filename).read().strip()
 		except:
-			print("Harddisk.py: failed to read %s" % filename)
+			Log.d("Failed to read %s" % filename)
 			raise
 
 	@staticmethod
@@ -26,7 +26,7 @@ class Util:
 		try:
 			return open(filename).read().splitlines()
 		except:
-			print("Harddisk.py: failed to read %s" % filename)
+			Log.d("Failed to read %s" % filename)
 			return []
 
 	@staticmethod
@@ -164,7 +164,7 @@ class Harddisk:
 		self.dev_path = '/dev/' + self.device
 		self.disk_path = self.dev_path
 
-		print("Harddisk.py: New disk: %s" % self.device)
+		Log.d("Harddisk.py: New disk: %s" % self.device)
 
 		if self.__data.get('ID_BUS') in ('ata', 'usb') and not self.isRemovable:
 			self.__startIdle()
@@ -268,7 +268,7 @@ class Harddisk:
 	def __system(self, cmd):
 		cmd = ' '.join(cmd)
 		res = system(cmd)
-		print("[Harddisk]: '%s' returned %d" % (cmd, res))
+		Log.d("[Harddisk]: '%s' returned %d" % (cmd, res))
 		return (res >> 8)
 
 	def __createPartition(self):
@@ -470,20 +470,20 @@ class Harddisk:
 		idle_time = t - self.last_access
 
 		stats = self.__readStats()
-		print("nr_read", stats[0], "nr_write", stats[1])
+		Log.d("nr_read %s nr_write %s" %(stats[0], stats[1]))
 		l = sum(stats)
-		print("sum", l, "prev_sum", self.last_stat)
+		Log.d("sum %s prev_sum %s" %(l, self.last_stat))
 
 		if l != self.last_stat and l >= 0: # access
-			print("hdd was accessed since previous check!")
+			Log.d("HDD was accessed since previous check!")
 			self.last_stat = l
 			self.last_access = t
 			idle_time = 0
 			self.is_sleeping = False
 		else:
-			print("hdd IDLE!")
+			Log.d("HDD IDLE!")
 
-		print("[IDLE]", idle_time, self.max_idle_time, self.is_sleeping)
+		Log.i("[IDLE] %s %s %s" %(idle_time, self.max_idle_time, self.is_sleeping))
 		if idle_time >= self.max_idle_time and not self.is_sleeping:
 			self.__setSleep()
 
@@ -616,6 +616,12 @@ DEVICEDB = \
 		{
 			"/devices/platform/ff500000.dwc3/xhci-hcd.0.auto/usb1": _("USB 2.0 (Back, inner)"),
 			"/devices/platform/ff500000.dwc3/xhci-hcd.0.auto/usb2": _("USB 3.0 (Back, outer)"),
+		},
+	"seven":
+		{
+			"/devices/platform/ff500000.dwc3/xhci-hcd.0.auto/usb2/2-1/2-1.1" : _("USB 3.0 (Back, outer"),
+			"/devices/platform/ff500000.dwc3/xhci-hcd.0.auto/usb2/2-1/2-1.3" : _("USB 3.0 (Back, inner"),
+			"/devices/platform/ff500000.dwc3/xhci-hcd.0.auto/usb2/2-1/2-1.2" : _("USB 3.0 (Front)"),
 		},
 	"dm8000":
 		{
@@ -846,7 +852,7 @@ class HarddiskManager:
 	def __callDeviceNotifier(self, device, reason):
 		if not device:
 			return
-		print("calling Notifier for device '%s', reason '%s'" % (device, reason))
+		Log.d("calling Notifier for device '%s', reason '%s'" % (device, reason))
 		for callback in self.delayed_device_Notifier:
 			try:
 				callback(device, reason)
@@ -856,7 +862,7 @@ class HarddiskManager:
 	def __callMountNotifier(self, event, mountpoint):
 		if not mountpoint:
 			return
-		print("calling MountNotifier for mountpoint '%s', event '%s'" % (event, mountpoint))
+		Log.d("calling MountNotifier for mountpoint '%s', event '%s'" % (event, mountpoint))
 		for callback in self.onUnMount_Notifier:
 			try:
 				callback(event, mountpoint)

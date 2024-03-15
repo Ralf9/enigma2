@@ -45,6 +45,7 @@ class EPGList(HTMLComponent, GUIComponent):
 	SKIN_COMPONENT_ICON_WIDTH = "iconWidth"
 	SKIN_COMPONENT_ICON_HPOS = "iconHPos"
 	SKIN_COMPONENT_ITEM_MARGIN = "itemMargin"
+	SKIN_COMPONENT_PROGRESS_HEIGHT = "progressHeight"
 
 	def __init__(self, type=EPG_TYPE_SINGLE, selChangedCB=None, timer = None):
 		self.days = (_("Mon"), _("Tue"), _("Wed"), _("Thu"), _("Fri"), _("Sat"), _("Sun"))
@@ -68,6 +69,7 @@ class EPGList(HTMLComponent, GUIComponent):
 		self._iconHeight = sizes.get(EPGList.SKIN_COMPONENT_ICON_HEIGHT, 21)
 		self._iconHPos = sizes.get(EPGList.SKIN_COMPONENT_ICON_HPOS, 4)
 		self._itemMargin = sizes.get(EPGList.SKIN_COMPONENT_ITEM_MARGIN, 10)
+		self._progressHeight = sizes.get(EPGList.SKIN_COMPONENT_PROGRESS_HEIGHT, 10)
 
 		if type in (EPG_TYPE_SINGLE, EPG_TYPE_SIMILAR):
 			self.l.setBuildFunc(self.buildSingleEntry)
@@ -165,7 +167,7 @@ class EPGList(HTMLComponent, GUIComponent):
 			xpos += w + self._itemMargin;
 			w = width // 6;
 			self.start_end_rect = Rect(xpos, 0, w, height)
-			self.progress_rect = Rect(xpos,  self._itemMargin // 2, w, height - self._itemMargin)
+			self.progress_rect = Rect(xpos,  self._progressHeight // 2, w, height - self._progressHeight)
 			xpos += w + self._itemMargin
 			w = width - xpos - self._itemMargin;
 			self.descr_rect = Rect(xpos, 0, w, height)

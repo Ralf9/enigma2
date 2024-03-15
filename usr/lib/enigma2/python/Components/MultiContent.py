@@ -1,4 +1,4 @@
-from enigma import eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_VALIGN_TOP, SCALE_ASPECT
+from enigma import GRADIENT_TYPE_NONE, eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_VALIGN_TOP, SCALE_ASPECT
 from skin import parseColor
 
 def MultiContentTemplateColor(n):
@@ -21,8 +21,14 @@ def MultiContentEntryPixmapAlphaTest(pos = (0, 0), size = (0, 0), png = None, ba
 def MultiContentEntryPixmapAlphaBlend(pos = (0, 0), size = (0, 0), png = None, backcolor = None, backcolor_sel = None, scale_flags = SCALE_ASPECT):
 	return (eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, pos[0], pos[1], size[0], size[1], png, backcolor, backcolor_sel, scale_flags)
 
-def MultiContentEntryProgress(pos = (0, 0), size = (0, 0), percent = None, borderWidth = None, foreColor = None, backColor = None, backColorSelected = None):
-	return (eListboxPythonMultiContent.TYPE_PROGRESS, pos[0], pos[1], size[0], size[1], percent, borderWidth, foreColor, backColor, backColorSelected)
+def MultiContentEntryProgress(pos = (0, 0), size = (0, 0), percent = None, borderWidth = None, foreColor = None, foreColorSelected=None, backColor = None, backColorSelected = None):
+	return (eListboxPythonMultiContent.TYPE_PROGRESS, pos[0], pos[1], size[0], size[1], percent, borderWidth, foreColor, foreColorSelected, backColor, backColorSelected)
 
 def MultiContentEntryProgressPixmap(pos = (0, 0), size = (0, 0), percent = None, png = None, borderWidth = None, foreColor = None, backColor = None, backColorSelected = None):
 	return (eListboxPythonMultiContent.TYPE_PROGRESS_PIXMAP, pos[0], pos[1], size[0], size[1], percent, png, borderWidth, foreColor, backColor, backColorSelected)
+
+def MultiContentEntryFill(pos=(0,0), size=(0,0), color=None, gradientColor=None, gradientType=GRADIENT_TYPE_NONE, gradientRotation=0.0):
+	return (eListboxPythonMultiContent.TYPE_FILL, pos[0], pos[1], size[0], size[1], gradientColor, gradientType, gradientRotation)
+
+def MultiContentEntryFillAlphaBlend(pos=(0,0), size=(0,0), color=None, gradientColor=None, gradientType=GRADIENT_TYPE_NONE, gradientRotation=0.0):
+	return (eListboxPythonMultiContent.TYPE_FILL_ALPHABLEND, pos[0], pos[1], size[0], size[1], gradientColor, gradientType, gradientRotation)

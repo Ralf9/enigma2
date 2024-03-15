@@ -6,6 +6,7 @@ from sys import stdout
 from Components.Language import language
 from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS
 from Tools.Import import my_import
+from Tools.Profile import profile
 from Plugins.Plugin import PluginDescriptor
 import keymapparser
 
@@ -54,6 +55,7 @@ class PluginComponent:
 				path = directory_category + "/" + pluginname
 				if os_path.isdir(path):
 					if fileExists(path + "/earlyplugin.pyc") or fileExists(path + "/earlyplugin.pyo") or fileExists(path + "/earlyplugin.py"):
+						profile("LOAD:EarlyPlugin:{0}".format(pluginname))
 						try:
 							plugin = my_import('.'.join(["Plugins", c, pluginname, "earlyplugin"]))
 							if "EarlyPlugins" not in plugin.__dict__:
@@ -149,7 +151,7 @@ class PluginComponent:
 
 		for x in where:
 			res.extend(self.plugins.get(x, [ ]))
-		res.sort(key=lambda x:(x.weight,x.name))
+		res.sort(key=lambda x:(x.weight,x.name,x.path))
 		return res
 
 	def getPluginsForMenu(self, menuid):

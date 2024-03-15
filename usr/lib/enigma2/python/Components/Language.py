@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
+from Tools.Profile import profile
+profile("Components.Language:Imports")
 import gettext
 import os
 import locale
@@ -142,3 +144,4 @@ class Language:
 		print("}", file=l)
 
 language = Language()
+profile("Components.Language:Done")

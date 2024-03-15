@@ -30,7 +30,6 @@ class ScreenAnimations(object):
 				duration = int(attrib.get("duration", 0))
 				alpha = pos = size = matrix = 0
 				alpha_hide = pos_hide = size_hide = rotate_hide = 0
-
 				for item in animation:
 					if item.tag == "alpha":
 						alpha = self._buildFloatAnimation(item, duration, self._buildInterpolator(attrib))

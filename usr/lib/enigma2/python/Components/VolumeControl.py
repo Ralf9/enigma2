@@ -7,7 +7,6 @@ from GlobalActions import globalActionMap
 from Components.config import config, ConfigSubsection, ConfigInteger
 from Components.HdmiCec import hdmi_cec
 
-profile("VolumeControl")
 #TODO .. move this to a own .py file
 class VolumeControl:
 	instance = None

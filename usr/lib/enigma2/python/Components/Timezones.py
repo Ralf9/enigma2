@@ -2,6 +2,7 @@ from enigma import e_tzset
 from Components.config import config
 from Components.GeoIPLookup import GeoIPLookup
 from Tools.Log import Log
+from Tools.Profile import profile
 
 from collections import OrderedDict
 from datetime import datetime
@@ -96,7 +97,7 @@ class Timezone(object):
 class Timezones(object):
 	CONFIG_VERSION = 2
 
-	def __init__(self):
+	def __init__(self, profilePerf=False):
 		self.timezones = []
 		self._lut = {}
 		self._regions = OrderedDict()
@@ -104,6 +105,7 @@ class Timezones(object):
 		self._geoIpZone = "Europe/Berlin"
 		self.onReady = []
 		self.onGeoIpReady = []
+		self._profilePerf = profilePerf
 		self.reload()
 
 	@property
@@ -158,21 +160,32 @@ class Timezones(object):
 	def regionalZones(self, region):
 		return self._regions.get(region, [])
 
+	def profile(self, key):
+		if self._profilePerf:
+			profile("Components.Timezones:{0}".format(key))
+
 	def reload(self):
 		GeoIPLookup(self._onGeoIpData)
 		self.timezones = []
 		self._lut = {}
 		self._regions = OrderedDict()
+		self.profile("Parsing")
 		zones = ZoneInfoFile(getzoneinfofile_stream()).zones
 		keys = sorted(zones.keys())
+		lastRegion = ""
+		self.profile("Creating")
 		for key in keys:
 			zinfo = zones[key]
 			timezone = Timezone(key, zinfo)
 			region = self._regions.get(timezone.region, [])
+			if timezone.region != lastRegion:
+				lastRegion = timezone.region
 			region.append(timezone)
 			self._regions[timezone.region] = region
 			self._lut[key] = timezone
 			self.timezones.append([timezone.name, timezone.key])
+		self.profile("Callbacks")
+		self._profilePerf = False
 		for fnc in self.onReady:
 			fnc()
 
@@ -217,4 +230,4 @@ class Timezones(object):
 			return t
 		return self.timezones[0][0]
 
-timezones = Timezones()
+timezones = Timezones(True)

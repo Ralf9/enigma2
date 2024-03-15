@@ -1,17 +1,19 @@
 from __future__ import absolute_import
 from Components.MenuList import MenuList
 from Tools.Directories import SCOPE_CURRENT_SKIN, resolveFilename
-from enigma import RT_HALIGN_LEFT, RT_VALIGN_CENTER, eListboxPythonMultiContent, gFont
+from enigma import GRADIENT_TYPE_SIMPLE, RADIUS_TYPE_ALL, RADIUS_TYPE_BOTTOM, RT_HALIGN_LEFT, RT_NO_ELLIPSIS, RT_VALIGN_CENTER, eListboxPythonMultiContent, gFont
 from skin import TemplatedListFonts, componentSizes
 from Tools.LoadPixmap import LoadPixmap
-
-#return (eListboxPythonMultiContent.TYPE_TEXT, pos[0], pos[1], size[0], size[1], font, flags, text, color, color_sel, backcolor, backcolor_sel, border_width, border_color)
+from Tools.Log import Log
 
 def ChoiceEntryComponent(key = "", text = ["--"]):
 	COMPONENT_FILLER_COUNT = "fillerCount"
+	COMPONENT_FADE_DIVIDER = "fadeDivider"
+	COMPONENT_DIVIDER_WIDTH = "dividerWidth"
+	COMPONENT_DIVIDER_HEIGHT = "dividerHeight"
 	res = [ text ]
 	"""
-	<component type="ChoiceList" itemHeight="30" textWidth="800" textHeight="25" textX="45" textY="0" pixmapWidth="35" pixmapHeight="25" fillerCount="200" />
+	<component type="ChoiceList" itemHeight="30" textWidth="800" textHeight="25" textX="45" textY="0" pixmapWidth="35" pixmapHeight="25" fadeDivider="0|1" dividerWidth="800", dividerHeight="10" />
 	"""
 	sizes = componentSizes[componentSizes.CHOICELIST]
 	tx = sizes.get(componentSizes.TEXT_X, 45)
@@ -22,9 +24,16 @@ def ChoiceEntryComponent(key = "", text = ["--"]):
 	pxy = sizes.get(componentSizes.PIXMAP_Y, 0)
 	pxw = sizes.get(componentSizes.PIXMAP_WIDTH, 35)
 	pxh = sizes.get(componentSizes.PIXMAP_HEIGHT, 25)
-	fillers = sizes.get(COMPONENT_FILLER_COUNT, 200)
+	dw = sizes.get(COMPONENT_DIVIDER_WIDTH, tw)
+	dh = sizes.get(COMPONENT_DIVIDER_HEIGHT, th/12)
+	if COMPONENT_FILLER_COUNT in sizes:
+		Log.i("fillerCount is obsolete and can be removed from <component type=\"ChoiceList\" ... />")
+	fadeDivider = sizes.get(COMPONENT_FADE_DIVIDER, 0)
 	if text[0] == "--":
-		res.append((eListboxPythonMultiContent.TYPE_TEXT, 0, 0, tw, th, 0, RT_HALIGN_LEFT|RT_VALIGN_CENTER, "-" * fillers))
+		entry = [eListboxPythonMultiContent.TYPE_FILL_ALPHABLEND, 0, (th-dh)/2, dw, dh]
+		if fadeDivider:
+			entry.extend([None, 0xFE000000, GRADIENT_TYPE_SIMPLE, -90.0])
+		res.append(tuple(entry))
 	else:
 		res.append((eListboxPythonMultiContent.TYPE_TEXT, tx, ty, tw, th, 0, RT_HALIGN_LEFT|RT_VALIGN_CENTER, text[0]))
 		png = (key != "False") and LoadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, "skin_default/buttons/key_" + key + ".png")) or None

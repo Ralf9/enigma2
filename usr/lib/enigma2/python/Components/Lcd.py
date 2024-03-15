@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from Components.config import config, ConfigSubsection, ConfigSlider, ConfigYesNo, ConfigNothing
-from enigma import eDBoxLCD
+from enigma import eLCD
 from Components.SystemInfo import SystemInfo
 
 class LCD:
@@ -12,17 +12,17 @@ class LCD:
 		value /= 10
 		if value > 255:
 			value = 255
-		eDBoxLCD.getInstance().setLCDBrightness(value)
+		eLCD.getInstance().setLCDBrightness(value)
 
 	def setContrast(self, value):
 		# not implemented
 		pass
 
 	def setInverted(self, value):
-		eDBoxLCD.getInstance().setInverted(value)
+		eLCD.getInstance().setInverted(value)
 
 	def isOled(self):
-		return eDBoxLCD.getInstance().isOled()
+		return eLCD.getInstance().isOled()
 
 def leaveStandby():
 	config.lcd.bright.apply()
@@ -33,33 +33,33 @@ def standbyCounterChanged(configElement):
 	config.lcd.standby.apply()
 
 def InitLcd():
-	instance = eDBoxLCD.getInstance()
+	instance = eLCD.getInstance()
 	if instance:
 		detected = instance.detected()
 	else:
 		detected = False
 	SystemInfo["Display"] = detected
-	config.lcd = ConfigSubsection();
+	config.lcd = ConfigSubsection()
 	if detected:
 		def setLCDbright(configElement):
-			ilcd.setBright(configElement.value);
+			ilcd.setBright(configElement.value)
 
 		def setLCDinverted(configElement):
-			ilcd.setInverted(configElement.value);
+			ilcd.setInverted(configElement.value)
 
 		ilcd = LCD()
 
 		config.lcd.contrast = ConfigNothing()
 		config.lcd.standby = ConfigSlider(default=1, limits=(0, 10))
-		config.lcd.standby.addNotifier(setLCDbright);
+		config.lcd.standby.addNotifier(setLCDbright)
 		config.lcd.standby.apply = lambda : setLCDbright(config.lcd.standby)
 
 		config.lcd.bright = ConfigSlider(default=SystemInfo["DefaultDisplayBrightness"], limits=(0, 10))
-		config.lcd.bright.addNotifier(setLCDbright, call_on_save_or_cancel=True);
+		config.lcd.bright.addNotifier(setLCDbright, call_on_save_or_cancel=True)
 		config.lcd.bright.apply = lambda : setLCDbright(config.lcd.bright)
 
 		config.lcd.invert = ConfigYesNo(default=False)
-		config.lcd.invert.addNotifier(setLCDinverted);
+		config.lcd.invert.addNotifier(setLCDinverted)
 	else:
 		def doNothing():
 			pass
@@ -70,4 +70,3 @@ def InitLcd():
 		config.lcd.standby.apply = lambda : doNothing()
 
 	config.misc.standbyCounter.addNotifier(standbyCounterChanged, initial_call = False)
-

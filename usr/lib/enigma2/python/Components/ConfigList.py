@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 from Components.HTMLComponent import HTMLComponent
 from Components.GUIComponent import GUIComponent
-from Components.config import KEY_LEFT, KEY_RIGHT, KEY_HOME, KEY_END, KEY_0, KEY_DELETE, KEY_BACKSPACE, KEY_OK, KEY_TOGGLEOW, KEY_ASCII, KEY_TIMEOUT, KEY_NUMBERS, ConfigElement, ConfigText, ConfigPassword
+from Components.config import KEY_LEFT, KEY_RIGHT, KEY_HOME, KEY_END, KEY_0, KEY_DELETE, KEY_BACKSPACE, KEY_OK, KEY_TOGGLEOW, KEY_ASCII, KEY_TIMEOUT, KEY_NUMBERS, ConfigElement, ConfigNumber, ConfigText, ConfigPassword
 from Components.ActionMap import NumberActionMap, ActionMap
 from enigma import eListbox, eListboxPythonConfigContent, eTimer
 from Screens.MessageBox import MessageBox
@@ -212,10 +212,10 @@ class ConfigListScreen(object):
 	def handleInputHelpers(self):
 		configElement = self["config"].getCurrent() and self["config"].getCurrent()[1]
 		if configElement:
-			self["VirtualKB"].setEnabled(True)
-			if "VKeyIcon" in self:
-				self["VKeyIcon"].boolean = True
-			if isinstance(configElement, ConfigText) or isinstance(configElement, ConfigPassword):
+			if isinstance(configElement, (ConfigText, ConfigPassword)) and not isinstance(configElement, ConfigNumber):
+				self["VirtualKB"].setEnabled(True)
+				if "VKeyIcon" in self:
+					self["VKeyIcon"].boolean = True
 				if "HelpWindow" in self and configElement.help_window and configElement.help_window.instance:
 					helpwindowpos = self["HelpWindow"].getPosition()
 					from enigma import ePoint
@@ -241,7 +241,7 @@ class ConfigListScreen(object):
 			self["config"].invalidate(self["config"].getCurrent())
 
 	def _getHelpWindow(self):
-		helpwin = self["config"].getCurrent()[1].help_window
+		helpwin = self["config"].getCurrent() and getattr(self["config"].getCurrent()[1], 'help_window', None)
 		return (helpwin and helpwin.instance) or None
 
 	def keyOK(self):

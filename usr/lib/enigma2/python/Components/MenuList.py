@@ -2,10 +2,10 @@ from __future__ import absolute_import
 from Components.HTMLComponent import HTMLComponent
 from Components.GUIComponent import GUIComponent
 
-from enigma import eListboxPythonStringContent, eListbox, ePoint
+from enigma import eListboxPythonStringContent, eListbox, ePoint, RADIUS_TYPE_ALL
 
 class MenuList(HTMLComponent, GUIComponent):
-	def __init__(self, list, enableWrapAround=False, content=eListboxPythonStringContent, mode=eListbox.layoutVertical, itemSize=0, itemWidth=0, itemHeight=0, margin=ePoint(0,0), selectionZoom=1.0):
+	def __init__(self, list, enableWrapAround=False, content=eListboxPythonStringContent, mode=eListbox.layoutVertical, itemSize=0, itemWidth=0, itemHeight=0, margin=ePoint(0,0), selectionZoom=1.0, selectionRadius=None, selectionRadiusType=RADIUS_TYPE_ALL):
 		GUIComponent.__init__(self)
 		self.list = list
 		self.l = content()
@@ -18,6 +18,8 @@ class MenuList(HTMLComponent, GUIComponent):
 		self._itemHeight = itemHeight
 		self._margin = margin
 		self._selectionZoom = selectionZoom
+		self._selectionRadius = selectionRadius
+		self._selectionRadiusType = selectionRadiusType
 
 	def getCurrent(self):
 		return self.l.getCurrentSelection()
@@ -29,6 +31,8 @@ class MenuList(HTMLComponent, GUIComponent):
 		instance.setMode(self._mode)
 		instance.setMargin(self._margin)
 		instance.setSelectionZoom(self._selectionZoom)
+		if self._selectionRadius != None:
+			instance.setSelectionRadius(self._selectionRadius, self._selectionRadiusType)
 		if self._itemSize:
 			if self._mode == eListbox.layoutVertical:
 				instance.setItemHeight(self._itemSize)

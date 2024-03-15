@@ -77,7 +77,7 @@ class ConfigElement(object):
 	# you can overide this for fancy default handling
 	def load(self):
 		sv = self.saved_value
-		if sv is None:
+		if not sv:
 			self.value = self.default
 		else:
 			self.value = self.fromstring(sv)
@@ -1454,7 +1454,7 @@ class ConfigLocations(ConfigElement):
 
 	def load(self):
 		sv = self.saved_value
-		if sv is None:
+		if not sv:
 			tmp = self.default
 		else:
 			tmp = self.fromstring(sv)
