@@ -223,12 +223,8 @@ class MMIDialog(Screen):
 		if self.action == 1:			#init
 			do_close = True
 
-		#module still there ?
-		if self.handler.getState(self.slotid) != 2:
-			do_close = True
-
-		#mmi session still active ?
-		if self.handler.getMMIState(self.slotid) != 1:
+		#module still there and mmi session still active ?
+		if self.handler.getState(self.slotid) != 2 and self.handler.getMMIState(self.slotid) != 1:
 			do_close = True
 
 		if do_close:
@@ -244,7 +240,7 @@ class CiMessageHandler:
 		self.ci = { }
 		self.dlgs = { }
 		self.ciStateChanged_conn = eDVBCI_UI.getInstance().ciStateChanged.connect(self.ciStateChanged)
-		SystemInfo["CommonInterface"] = eDVBCIInterfaces.getInstance().getNumOfSlots() > 0
+		SystemInfo["CommonInterface"] = property(lambda: eDVBCIInterfaces.getInstance().getNumOfSlots() > 0)
 		try:
 			file = open("/proc/stb/tsmux/ci0_tsclk", "r")
 			file.close()

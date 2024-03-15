@@ -2020,7 +2020,7 @@ class InfoBarSubserviceSelection:
 				keys = ["red", "",  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ] + [""] * n
 				selection += 2
 
-			self.session.openWithCallback(self.subserviceSelected, ChoiceBox, title=_("Please select a subservice..."), list = tlist, selection = selection, keys = keys, skin_name = "SubserviceSelection")
+			self.session.openWithCallback(self.subserviceSelected, ChoiceBox, title=_("Please select a subservice..."), list = tlist, selection = selection, keys = keys, skin_name = "SubserviceSelection", windowTitle=_("Subservices"))
 
 	def subserviceSelected(self, service):
 		del self.bouquets

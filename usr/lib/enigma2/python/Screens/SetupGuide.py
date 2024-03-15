@@ -1,3 +1,5 @@
+from Tools.Profile import profile
+profile("SetupGuide:Imports")
 from Screens.Screen import Screen
 from Components.config import KEY_LEFT, KEY_RIGHT, KEY_0, KEY_BACKSPACE, KEY_DELETE, config, ConfigBoolean
 from Components.ActionMap import NumberActionMap
@@ -15,7 +17,6 @@ from Screens.MessageBox import MessageBox
 from Screens.ChoiceBox import ChoiceBox
 import six
 from six.moves import range
-
 config.misc.firstrun = ConfigBoolean(default = True)
 
 class SetupGuideSummary(Screen):
@@ -363,3 +364,4 @@ class SetupGuide(Screen):
 		self.checkButtons()
 		self.updateSummary()
 
+profile("SetupGuide:Done")

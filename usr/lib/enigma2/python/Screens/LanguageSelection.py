@@ -1,4 +1,6 @@
 from __future__ import absolute_import
+from Tools.Profile import profile
+profile("LOAD:Screens.LangaugeSelection")
 from enigma import eSize
 
 from Screens.Screen import Screen

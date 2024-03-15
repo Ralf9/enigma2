@@ -21,14 +21,13 @@ from Screens.InfoBarGenerics import InfoBarShowHide, \
 	InfoBarSubtitleSupport, InfoBarPiP, InfoBarPlugins, InfoBarServiceErrorPopupSupport, InfoBarJobman, InfoBarAutoSleepTimer, InfoBarGstreamerErrorPopupSupport
 
 from Screens.InfoBarPrivate import InfoBarPrivateExtensions
-profile("LOAD:InitBar_Components")
+profile("LOAD:InfoBar_Components")
 from Components.ActionMap import HelpableActionMap
 from Components.config import config, ConfigBoolean
 from Components.ServiceEventTracker import ServiceEventTracker, InfoBarBase
 from Components.PluginComponent import plugins
 from Plugins.Plugin import PluginDescriptor
 
-profile("LOAD:HelpableScreen")
 from Screens.HelpMenu import HelpableScreen
 
 config.misc.initialharddisknotification = ConfigBoolean(True)

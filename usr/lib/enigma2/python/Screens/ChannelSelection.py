@@ -2,7 +2,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 from Tools.Profile import profile
-
+profile("ChannelSelection:Imports")
 from Screens.Screen import Screen
 from Components.Button import Button
 from Components.ServiceList import ServiceList
@@ -11,26 +11,19 @@ from Components.MenuList import MenuList
 from Components.ServiceEventTracker import ServiceEventTracker, InfoBarBase
 from Screens.ChoiceBox import ChoiceBox
 from six import unichr
-profile("ChannelSelection.py 1")
 from Screens.EpgSelection import EPGSelection
 from enigma import eServiceReference, eServiceCenter, eTimer, eDVBDB, iPlayableService, iServiceInformation, getPrevAsciiCode, eEnv, eEPGCache
 from Components.config import config, ConfigSubsection, ConfigText, NoSave, ConfigBoolean
 from Tools.NumericalTextInput import NumericalTextInput
-profile("ChannelSelection.py 2")
 from Components.NimManager import nimmanager
-profile("ChannelSelection.py 2.1")
 from Components.Sources.RdsDecoder import RdsDecoder
-profile("ChannelSelection.py 2.2")
 from Components.Sources.ServiceEvent import ServiceEvent
-profile("ChannelSelection.py 2.3")
 from Components.Input import Input
-profile("ChannelSelection.py 3")
 from Components.ChoiceList import ChoiceList, ChoiceEntryComponent
 from Components.SystemInfo import SystemInfo
 from Screens.InputBox import InputBox, PinInput
 from Screens.MessageBox import MessageBox
 from Screens.ServiceInfo import ServiceInfo
-profile("ChannelSelection.py 4")
 from Screens.PictureInPicture import PictureInPicture
 import Screens.Standby
 from ServiceReference import ServiceReference
@@ -39,7 +32,7 @@ from os import remove
 from Plugins.Plugin import PluginDescriptor
 from Components.PluginComponent import plugins
 from Screens.ChannelSelectionDisplaySettings import ChannelSelectionDisplaySettings
-profile("ChannelSelection.py after imports")
+profile("ChannelSelection:Definitions")
 
 FLAG_SERVICE_NEW_FOUND = 64 #define in lib/dvb/idvb.h as dxNewFound = 64
 

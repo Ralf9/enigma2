@@ -32,7 +32,7 @@ def makeEmptyWizard():
 
 NetworkWizardNew = resourcemanager.getResource("NetworkWizard.NetworkWizardNew", makeEmptyWizard())
 VideoWizard = resourcemanager.getResource("videomode.videowizard", makeEmptyWizard())
-InputDeviceWizardBase = resourcemanager.getResource("InputDeviceWizard.InputDeviceWizardBase", makeEmptyWizard())
+InputDeviceWizardBase = makeEmptyWizard()
 
 class StartWizard(InputDeviceWizardBase, NetworkWizardNew, VideoWizard, DefaultSatLists, LanguageSelection, Rc):
 	def __init__(self, session, silent = True, showSteps = False, neededTag = None):

@@ -83,8 +83,6 @@ class AnimationSetup(Screen):
 		self.session.open(ExtendedAnimationsSetup)
 
 class ExtendedAnimationsSetup(Screen, ConfigListScreen):
-	DEVICES_TO_ANIMATE = ["dm900", "dm920", "one", "two"]
-
 	def __init__(self, session, windowTitle=_("Extend Animations Configuration")):
 		Screen.__init__(self, session, windowTitle=windowTitle)
 		ConfigListScreen.__init__(self, [], session=session, on_change=self._onChange)
@@ -101,9 +99,8 @@ class ExtendedAnimationsSetup(Screen, ConfigListScreen):
 			}, -2)
 
 		self._dsk_osd = getDesktop(0)
-		if HardwareInfo().get_device_name() in self.DEVICES_TO_ANIMATE:
-			self._dsk_dsp = getDesktop(1)
-		else:
+		self._dsk_dsp = getDesktop(1)
+		if not (self._dsk_dsp and self._dsk_dsp.isAnimationsEnabled()):
 			self._dsk_dsp = None
 		self._createSetup()
 

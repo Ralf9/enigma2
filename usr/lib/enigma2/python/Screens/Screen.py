@@ -2,13 +2,10 @@ from __future__ import print_function
 from Tools.Profile import profile
 from six.moves import range
 
-profile("LOAD:GUISkin")
+profile("Screen:Imports")
 from Components.GUISkin import GUISkin
-profile("LOAD:Source")
 from Components.Sources.Source import Source
-profile("LOAD:GUIComponent")
 from Components.GUIComponent import GUIComponent
-profile("LOAD:eRCInput")
 from enigma import eRCInput
 
 class Screen(dict, GUISkin):
@@ -291,4 +288,3 @@ class Screen(dict, GUISkin):
 
 	def ignoreSource(self, name):
 		return False
-
