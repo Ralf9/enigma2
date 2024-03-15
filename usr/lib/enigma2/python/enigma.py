@@ -114,6 +114,7 @@ DISPLAY_FBDEV = _enigma.DISPLAY_FBDEV
 ENABLE_ALSA_AUDIO = _enigma.ENABLE_ALSA_AUDIO
 ENABLE_EWEBVIEW = _enigma.ENABLE_EWEBVIEW
 ENABLE_SVG = _enigma.ENABLE_SVG
+HAVE_AARCH64 = _enigma.HAVE_AARCH64
 HAVE_BOOST = _enigma.HAVE_BOOST
 HAVE_BOOST_ALGORITHM_STRING_HPP = _enigma.HAVE_BOOST_ALGORITHM_STRING_HPP
 HAVE_BOOST_FORMAT_HPP = _enigma.HAVE_BOOST_FORMAT_HPP
@@ -164,6 +165,7 @@ _POSIX_PTHREAD_SEMANTICS = _enigma._POSIX_PTHREAD_SEMANTICS
 _TANDEM_SOURCE = _enigma._TANDEM_SOURCE
 __EXTENSIONS__ = _enigma.__EXTENSIONS__
 _DARWIN_USE_64_BIT_INODE = _enigma._DARWIN_USE_64_BIT_INODE
+host_cpu = _enigma.host_cpu
 class SwigPyIterator(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
 
@@ -259,6 +261,7 @@ class eSocketNotifier(iObject):
     Priority = _enigma.eSocketNotifier_Priority
     Error = _enigma.eSocketNotifier_Error
     Hungup = _enigma.eSocketNotifier_Hungup
+    FastRead = _enigma.eSocketNotifier_FastRead
     __swig_destroy__ = _enigma.delete_eSocketNotifier
     activated = _swig_property(_enigma.eSocketNotifier_activated_get, _enigma.eSocketNotifier_activated_set)
 
@@ -282,11 +285,6 @@ class eSocketNotifier(iObject):
         return _enigma.eSocketNotifier_getFD(self)
 
 
-    def getRequested(self):
-        """getRequested(eSocketNotifier self) -> int"""
-        return _enigma.eSocketNotifier_getRequested(self)
-
-
     def setRequested(self, req):
         """setRequested(eSocketNotifier self, int req)"""
         return _enigma.eSocketNotifier_setRequested(self, req)
@@ -307,6 +305,14 @@ class eSocketNotifier(iObject):
         return _enigma.eSocketNotifier_getContext(self)
 
 
+    def getRequested(self, *args):
+        """
+        getRequested(eSocketNotifier self) -> int
+        getRequested(eSocketNotifier self, int param) -> int
+        """
+        return _enigma.eSocketNotifier_getRequested(self, *args)
+
+
     def __init__(self, fd, req, startNow=True):
         """
         __init__(eSocketNotifier self, int fd, int req, bool startNow=True) -> eSocketNotifier
@@ -317,11 +323,11 @@ eSocketNotifier.start = new_instancemethod(_enigma.eSocketNotifier_start, None, 
 eSocketNotifier.stop = new_instancemethod(_enigma.eSocketNotifier_stop, None, eSocketNotifier)
 eSocketNotifier.isRunning = new_instancemethod(_enigma.eSocketNotifier_isRunning, None, eSocketNotifier)
 eSocketNotifier.getFD = new_instancemethod(_enigma.eSocketNotifier_getFD, None, eSocketNotifier)
-eSocketNotifier.getRequested = new_instancemethod(_enigma.eSocketNotifier_getRequested, None, eSocketNotifier)
 eSocketNotifier.setRequested = new_instancemethod(_enigma.eSocketNotifier_setRequested, None, eSocketNotifier)
 eSocketNotifier.getState = new_instancemethod(_enigma.eSocketNotifier_getState, None, eSocketNotifier)
 eSocketNotifier.activate = new_instancemethod(_enigma.eSocketNotifier_activate, None, eSocketNotifier)
 eSocketNotifier.getContext = new_instancemethod(_enigma.eSocketNotifier_getContext, None, eSocketNotifier)
+eSocketNotifier.getRequested = new_instancemethod(_enigma.eSocketNotifier_getRequested, None, eSocketNotifier)
 eSocketNotifier_swigregister = _enigma.eSocketNotifier_swigregister
 eSocketNotifier_swigregister(eSocketNotifier)
 
@@ -740,6 +746,26 @@ class eServiceReference(object):
         return _enigma.eServiceReference_getUserAgent(self)
 
 
+    def setUserLanguage(self, lang):
+        """setUserLanguage(eServiceReference self, std::string const & lang)"""
+        return _enigma.eServiceReference_setUserLanguage(self, lang)
+
+
+    def getUserLanguage(self):
+        """getUserLanguage(eServiceReference self) -> std::string const &"""
+        return _enigma.eServiceReference_getUserLanguage(self)
+
+
+    def setUserCodec(self, codec):
+        """setUserCodec(eServiceReference self, std::string const & codec)"""
+        return _enigma.eServiceReference_setUserCodec(self, codec)
+
+
+    def getUserCodec(self):
+        """getUserCodec(eServiceReference self) -> std::string const &"""
+        return _enigma.eServiceReference_getUserCodec(self)
+
+
     def setTransportHeaders(self, headers):
         """setTransportHeaders(eServiceReference self, StringMap headers)"""
         return _enigma.eServiceReference_setTransportHeaders(self, headers)
@@ -819,6 +845,10 @@ eServiceReference.getName = new_instancemethod(_enigma.eServiceReference_getName
 eServiceReference.setName = new_instancemethod(_enigma.eServiceReference_setName, None, eServiceReference)
 eServiceReference.setUserAgent = new_instancemethod(_enigma.eServiceReference_setUserAgent, None, eServiceReference)
 eServiceReference.getUserAgent = new_instancemethod(_enigma.eServiceReference_getUserAgent, None, eServiceReference)
+eServiceReference.setUserLanguage = new_instancemethod(_enigma.eServiceReference_setUserLanguage, None, eServiceReference)
+eServiceReference.getUserLanguage = new_instancemethod(_enigma.eServiceReference_getUserLanguage, None, eServiceReference)
+eServiceReference.setUserCodec = new_instancemethod(_enigma.eServiceReference_setUserCodec, None, eServiceReference)
+eServiceReference.getUserCodec = new_instancemethod(_enigma.eServiceReference_getUserCodec, None, eServiceReference)
 eServiceReference.setTransportHeaders = new_instancemethod(_enigma.eServiceReference_setTransportHeaders, None, eServiceReference)
 eServiceReference.getTransportHeaders = new_instancemethod(_enigma.eServiceReference_getTransportHeaders, None, eServiceReference)
 eServiceReference.getSuburi = new_instancemethod(_enigma.eServiceReference_getSuburi, None, eServiceReference)
@@ -1998,6 +2028,16 @@ class iUriService(iObject):
         return _enigma.iUriService_setResolvedName(self, name)
 
 
+    def setResolvedUserAgent(self, userAgent):
+        """setResolvedUserAgent(iUriService self, std::string const & userAgent)"""
+        return _enigma.iUriService_setResolvedUserAgent(self, userAgent)
+
+
+    def setResolvedTransportHeaders(self, headers):
+        """setResolvedTransportHeaders(iUriService self, StringMap headers)"""
+        return _enigma.iUriService_setResolvedTransportHeaders(self, headers)
+
+
     def setResolvedUri(self, *args):
         """
         setResolvedUri(iUriService self, std::string const & resolvedUri, int serviceType, std::string const & suburi)
@@ -2011,6 +2051,8 @@ class iUriService(iObject):
         return _enigma.iUriService_failedToResolveUri(self)
 
 iUriService.setResolvedName = new_instancemethod(_enigma.iUriService_setResolvedName, None, iUriService)
+iUriService.setResolvedUserAgent = new_instancemethod(_enigma.iUriService_setResolvedUserAgent, None, iUriService)
+iUriService.setResolvedTransportHeaders = new_instancemethod(_enigma.iUriService_setResolvedTransportHeaders, None, iUriService)
 iUriService.setResolvedUri = new_instancemethod(_enigma.iUriService_setResolvedUri, None, iUriService)
 iUriService.failedToResolveUri = new_instancemethod(_enigma.iUriService_failedToResolveUri, None, iUriService)
 iUriService_swigregister = _enigma.iUriService_swigregister
@@ -2029,6 +2071,16 @@ class iUriServicePtr(object):
         return _enigma.iUriServicePtr_setResolvedName(self, name)
 
 
+    def setResolvedUserAgent(self, userAgent):
+        """setResolvedUserAgent(iUriServicePtr self, std::string const & userAgent)"""
+        return _enigma.iUriServicePtr_setResolvedUserAgent(self, userAgent)
+
+
+    def setResolvedTransportHeaders(self, headers):
+        """setResolvedTransportHeaders(iUriServicePtr self, StringMap headers)"""
+        return _enigma.iUriServicePtr_setResolvedTransportHeaders(self, headers)
+
+
     def setResolvedUri(self, *args):
         """
         setResolvedUri(iUriServicePtr self, std::string const & resolvedUri, int serviceType, std::string const & suburi)
@@ -2045,6 +2097,8 @@ iUriServicePtr.__ref__ = new_instancemethod(_enigma.iUriServicePtr___ref__, None
 iUriServicePtr.getPtrString = new_instancemethod(_enigma.iUriServicePtr_getPtrString, None, iUriServicePtr)
 iUriServicePtr.__deref__ = new_instancemethod(_enigma.iUriServicePtr___deref__, None, iUriServicePtr)
 iUriServicePtr.setResolvedName = new_instancemethod(_enigma.iUriServicePtr_setResolvedName, None, iUriServicePtr)
+iUriServicePtr.setResolvedUserAgent = new_instancemethod(_enigma.iUriServicePtr_setResolvedUserAgent, None, iUriServicePtr)
+iUriServicePtr.setResolvedTransportHeaders = new_instancemethod(_enigma.iUriServicePtr_setResolvedTransportHeaders, None, iUriServicePtr)
 iUriServicePtr.setResolvedUri = new_instancemethod(_enigma.iUriServicePtr_setResolvedUri, None, iUriServicePtr)
 iUriServicePtr.failedToResolveUri = new_instancemethod(_enigma.iUriServicePtr_failedToResolveUri, None, iUriServicePtr)
 iUriServicePtr_swigregister = _enigma.iUriServicePtr_swigregister
@@ -2593,24 +2647,29 @@ def eStreamProcessorFactory_getFactories():
     return _enigma.eStreamProcessorFactory_getFactories()
 eStreamProcessorFactory_getFactories = _enigma.eStreamProcessorFactory_getFactories
 
-class eStreamProcessor(object):
+class eStreamProcessor(iObject):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
     __swig_destroy__ = _enigma.delete_eStreamProcessor
-
-    def getServiceReference(self):
-        """getServiceReference(eStreamProcessor self) -> eServiceReference"""
-        return _enigma.eStreamProcessor_getServiceReference(self)
-
 
     def valid(self):
         """valid(eStreamProcessor self) -> bool"""
         return _enigma.eStreamProcessor_valid(self)
 
 
-    def start(self):
-        """start(eStreamProcessor self)"""
-        return _enigma.eStreamProcessor_start(self)
+    def connectVideoEvent(self, event, conn):
+        """connectVideoEvent(eStreamProcessor self, sigc::slot1< void,eStreamProcessor::videoEvent & > const & event, ePtr< eConnection > & conn) -> RESULT"""
+        return _enigma.eStreamProcessor_connectVideoEvent(self, event, conn)
+
+
+    def connectAudioEvent(self, event, conn):
+        """connectAudioEvent(eStreamProcessor self, sigc::slot1< void,eStreamProcessor::audioEvent & > const & event, ePtr< eConnection > & conn) -> RESULT"""
+        return _enigma.eStreamProcessor_connectAudioEvent(self, event, conn)
+
+
+    def start(self, userLanguage, userCodec):
+        """start(eStreamProcessor self, std::string const & userLanguage, std::string const & userCodec)"""
+        return _enigma.eStreamProcessor_start(self, userLanguage, userCodec)
 
 
     def stop(self):
@@ -2628,60 +2687,17 @@ class eStreamProcessor(object):
         return _enigma.eStreamProcessor_resume(self)
 
 
-    def seekDone(self, status):
-        """seekDone(eStreamProcessor self, int status)"""
-        return _enigma.eStreamProcessor_seekDone(self, status)
-
-
-    def flush(self):
-        """flush(eStreamProcessor self)"""
-        return _enigma.eStreamProcessor_flush(self)
-
-
-    def parsed(self):
-        """parsed(eStreamProcessor self)"""
-        return _enigma.eStreamProcessor_parsed(self)
-
-
-    def ready(self):
-        """ready(eStreamProcessor self)"""
-        return _enigma.eStreamProcessor_ready(self)
-
-
-    def getStreams(self):
-        """getStreams(eStreamProcessor self) -> std::vector< StreamInfo,std::allocator< StreamInfo > > const &"""
-        return _enigma.eStreamProcessor_getStreams(self)
-
-
-    def selectVideoStream(self, *args):
+    def flush(self, type=3):
         """
-        selectVideoStream(eStreamProcessor self, int index, StreamRestrictions const & restrictions) -> bool
-        selectVideoStream(eStreamProcessor self, int index) -> bool
+        flush(eStreamProcessor self, int type=3)
+        flush(eStreamProcessor self)
         """
-        return _enigma.eStreamProcessor_selectVideoStream(self, *args)
+        return _enigma.eStreamProcessor_flush(self, type)
 
 
-    def selectAudioStream(self, *args):
-        """
-        selectAudioStream(eStreamProcessor self, int index, StreamRestrictions const & restrictions) -> bool
-        selectAudioStream(eStreamProcessor self, int index) -> bool
-        """
-        return _enigma.eStreamProcessor_selectAudioStream(self, *args)
-
-
-    def deleteStream(self, index):
-        """deleteStream(eStreamProcessor self, int index)"""
-        return _enigma.eStreamProcessor_deleteStream(self, index)
-
-
-    def getActiveVideoIndex(self):
-        """getActiveVideoIndex(eStreamProcessor self) -> int"""
-        return _enigma.eStreamProcessor_getActiveVideoIndex(self)
-
-
-    def getActiveAudioIndex(self):
-        """getActiveAudioIndex(eStreamProcessor self) -> int"""
-        return _enigma.eStreamProcessor_getActiveAudioIndex(self)
+    def getActiveVideoCodec(self):
+        """getActiveVideoCodec(eStreamProcessor self) -> int"""
+        return _enigma.eStreamProcessor_getActiveVideoCodec(self)
 
 
     def getActiveAudioCodec(self):
@@ -2714,65 +2730,62 @@ class eStreamProcessor(object):
         return _enigma.eStreamProcessor_getProgressive(self, progressive)
 
 
-    def isEOS(self):
-        """isEOS(eStreamProcessor self) -> bool"""
-        return _enigma.eStreamProcessor_isEOS(self)
-
-
-    def getVideoFrames(self, frames):
-        """getVideoFrames(eStreamProcessor self, std::vector< RawData,std::allocator< RawData > > & frames) -> bool"""
-        return _enigma.eStreamProcessor_getVideoFrames(self, frames)
-
-
-    def getAudioPackets(self, packets):
-        """getAudioPackets(eStreamProcessor self, std::vector< RawData,std::allocator< RawData > > & packets) -> bool"""
-        return _enigma.eStreamProcessor_getAudioPackets(self, packets)
-
-    streamStarted = _swig_property(_enigma.eStreamProcessor_streamStarted_get, _enigma.eStreamProcessor_streamStarted_set)
-    formatChanged = _swig_property(_enigma.eStreamProcessor_formatChanged_get, _enigma.eStreamProcessor_formatChanged_set)
-    framerateChanged = _swig_property(_enigma.eStreamProcessor_framerateChanged_get, _enigma.eStreamProcessor_framerateChanged_set)
-    progressiveChanged = _swig_property(_enigma.eStreamProcessor_progressiveChanged_get, _enigma.eStreamProcessor_progressiveChanged_set)
-    videoPtsValid = _swig_property(_enigma.eStreamProcessor_videoPtsValid_get, _enigma.eStreamProcessor_videoPtsValid_set)
-    lastVideoConsumed = _swig_property(_enigma.eStreamProcessor_lastVideoConsumed_get, _enigma.eStreamProcessor_lastVideoConsumed_set)
-    lastAudioConsumed = _swig_property(_enigma.eStreamProcessor_lastAudioConsumed_get, _enigma.eStreamProcessor_lastAudioConsumed_set)
-    audioCodecChanged = _swig_property(_enigma.eStreamProcessor_audioCodecChanged_get, _enigma.eStreamProcessor_audioCodecChanged_set)
-
-    def __init__(self, streamManager):
-        """__init__(eStreamProcessor self, StreamManager & streamManager) -> eStreamProcessor"""
+    def __init__(self, name, stream):
+        """__init__(eStreamProcessor self, std::string const & name, ePtr< iStream > stream) -> eStreamProcessor"""
         if self.__class__ == eStreamProcessor:
             _self = None
         else:
             _self = self
-        _enigma.eStreamProcessor_swiginit(self, _enigma.new_eStreamProcessor(_self, streamManager))
+        _enigma.eStreamProcessor_swiginit(self, _enigma.new_eStreamProcessor(_self, name, stream))
+
+    def onContainerReady(self):
+        """onContainerReady(eStreamProcessor self)"""
+        return _enigma.eStreamProcessor_onContainerReady(self)
+
+
+    def onBufferChanged(self, full):
+        """onBufferChanged(eStreamProcessor self, bool full)"""
+        return _enigma.eStreamProcessor_onBufferChanged(self, full)
+
     def __disown__(self):
         self.this.disown()
         _enigma.disown_eStreamProcessor(self)
         return weakref_proxy(self)
-eStreamProcessor.getServiceReference = new_instancemethod(_enigma.eStreamProcessor_getServiceReference, None, eStreamProcessor)
+
+    def AddRef(self):
+        """AddRef(eStreamProcessor self)"""
+        return _enigma.eStreamProcessor_AddRef(self)
+
+
+    def Release(self):
+        """Release(eStreamProcessor self)"""
+        return _enigma.eStreamProcessor_Release(self)
+
+
+    def Delete(self):
+        """Delete(eStreamProcessor self)"""
+        return _enigma.eStreamProcessor_Delete(self)
+
 eStreamProcessor.valid = new_instancemethod(_enigma.eStreamProcessor_valid, None, eStreamProcessor)
+eStreamProcessor.connectVideoEvent = new_instancemethod(_enigma.eStreamProcessor_connectVideoEvent, None, eStreamProcessor)
+eStreamProcessor.connectAudioEvent = new_instancemethod(_enigma.eStreamProcessor_connectAudioEvent, None, eStreamProcessor)
 eStreamProcessor.start = new_instancemethod(_enigma.eStreamProcessor_start, None, eStreamProcessor)
 eStreamProcessor.stop = new_instancemethod(_enigma.eStreamProcessor_stop, None, eStreamProcessor)
 eStreamProcessor.pause = new_instancemethod(_enigma.eStreamProcessor_pause, None, eStreamProcessor)
 eStreamProcessor.resume = new_instancemethod(_enigma.eStreamProcessor_resume, None, eStreamProcessor)
-eStreamProcessor.seekDone = new_instancemethod(_enigma.eStreamProcessor_seekDone, None, eStreamProcessor)
 eStreamProcessor.flush = new_instancemethod(_enigma.eStreamProcessor_flush, None, eStreamProcessor)
-eStreamProcessor.parsed = new_instancemethod(_enigma.eStreamProcessor_parsed, None, eStreamProcessor)
-eStreamProcessor.ready = new_instancemethod(_enigma.eStreamProcessor_ready, None, eStreamProcessor)
-eStreamProcessor.getStreams = new_instancemethod(_enigma.eStreamProcessor_getStreams, None, eStreamProcessor)
-eStreamProcessor.selectVideoStream = new_instancemethod(_enigma.eStreamProcessor_selectVideoStream, None, eStreamProcessor)
-eStreamProcessor.selectAudioStream = new_instancemethod(_enigma.eStreamProcessor_selectAudioStream, None, eStreamProcessor)
-eStreamProcessor.deleteStream = new_instancemethod(_enigma.eStreamProcessor_deleteStream, None, eStreamProcessor)
-eStreamProcessor.getActiveVideoIndex = new_instancemethod(_enigma.eStreamProcessor_getActiveVideoIndex, None, eStreamProcessor)
-eStreamProcessor.getActiveAudioIndex = new_instancemethod(_enigma.eStreamProcessor_getActiveAudioIndex, None, eStreamProcessor)
+eStreamProcessor.getActiveVideoCodec = new_instancemethod(_enigma.eStreamProcessor_getActiveVideoCodec, None, eStreamProcessor)
 eStreamProcessor.getActiveAudioCodec = new_instancemethod(_enigma.eStreamProcessor_getActiveAudioCodec, None, eStreamProcessor)
 eStreamProcessor.getWidth = new_instancemethod(_enigma.eStreamProcessor_getWidth, None, eStreamProcessor)
 eStreamProcessor.getHeight = new_instancemethod(_enigma.eStreamProcessor_getHeight, None, eStreamProcessor)
 eStreamProcessor.getAspect = new_instancemethod(_enigma.eStreamProcessor_getAspect, None, eStreamProcessor)
 eStreamProcessor.getFramerate = new_instancemethod(_enigma.eStreamProcessor_getFramerate, None, eStreamProcessor)
 eStreamProcessor.getProgressive = new_instancemethod(_enigma.eStreamProcessor_getProgressive, None, eStreamProcessor)
-eStreamProcessor.isEOS = new_instancemethod(_enigma.eStreamProcessor_isEOS, None, eStreamProcessor)
-eStreamProcessor.getVideoFrames = new_instancemethod(_enigma.eStreamProcessor_getVideoFrames, None, eStreamProcessor)
-eStreamProcessor.getAudioPackets = new_instancemethod(_enigma.eStreamProcessor_getAudioPackets, None, eStreamProcessor)
+eStreamProcessor.onContainerReady = new_instancemethod(_enigma.eStreamProcessor_onContainerReady, None, eStreamProcessor)
+eStreamProcessor.onBufferChanged = new_instancemethod(_enigma.eStreamProcessor_onBufferChanged, None, eStreamProcessor)
+eStreamProcessor.AddRef = new_instancemethod(_enigma.eStreamProcessor_AddRef, None, eStreamProcessor)
+eStreamProcessor.Release = new_instancemethod(_enigma.eStreamProcessor_Release, None, eStreamProcessor)
+eStreamProcessor.Delete = new_instancemethod(_enigma.eStreamProcessor_Delete, None, eStreamProcessor)
 eStreamProcessor_swigregister = _enigma.eStreamProcessor_swigregister
 eStreamProcessor_swigregister(eStreamProcessor)
 
@@ -2830,6 +2843,25 @@ ePythonConfigQuery_swigregister(ePythonConfigQuery)
 def ePythonConfigQuery_getQueryFuncSignal():
     return _enigma.ePythonConfigQuery_getQueryFuncSignal()
 ePythonConfigQuery_getQueryFuncSignal = _enigma.ePythonConfigQuery_getQueryFuncSignal
+
+class eSystemResourceLock(iObject):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    ResourceLockFramebufferTV = _enigma.eSystemResourceLock_ResourceLockFramebufferTV
+    ResourceLockFramebufferDisplay = _enigma.eSystemResourceLock_ResourceLockFramebufferDisplay
+    ResourceLockAudio = _enigma.eSystemResourceLock_ResourceLockAudio
+    ResourceLockInput = _enigma.eSystemResourceLock_ResourceLockInput
+    ResourceLockAll = _enigma.eSystemResourceLock_ResourceLockAll
+
+    def __init__(self, *args):
+        """
+        __init__(eSystemResourceLock self, int which) -> eSystemResourceLock
+        __init__(eSystemResourceLock self) -> eSystemResourceLock
+        """
+        _enigma.eSystemResourceLock_swiginit(self, _enigma.new_eSystemResourceLock(*args))
+    __swig_destroy__ = _enigma.delete_eSystemResourceLock
+eSystemResourceLock_swigregister = _enigma.eSystemResourceLock_swigregister
+eSystemResourceLock_swigregister(eSystemResourceLock)
 
 class eAlsaOutput(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
@@ -3162,6 +3194,11 @@ class eRect(object):
         return _enigma.eRect_setY(self, y)
 
 
+    def set(self, other):
+        """set(eRect self, eRect other)"""
+        return _enigma.eRect_set(self, other)
+
+
     def topLeft(self):
         """topLeft(eRect self) -> ePoint"""
         return _enigma.eRect_topLeft(self)
@@ -3400,6 +3437,7 @@ eRect.setRight = new_instancemethod(_enigma.eRect_setRight, None, eRect)
 eRect.setBottom = new_instancemethod(_enigma.eRect_setBottom, None, eRect)
 eRect.setX = new_instancemethod(_enigma.eRect_setX, None, eRect)
 eRect.setY = new_instancemethod(_enigma.eRect_setY, None, eRect)
+eRect.set = new_instancemethod(_enigma.eRect_set, None, eRect)
 eRect.topLeft = new_instancemethod(_enigma.eRect_topLeft, None, eRect)
 eRect.bottomRight = new_instancemethod(_enigma.eRect_bottomRight, None, eRect)
 eRect.topRight = new_instancemethod(_enigma.eRect_topRight, None, eRect)
@@ -3487,6 +3525,11 @@ class eSize(object):
         return _enigma.eSize_height(self)
 
 
+    def set(self, w, h):
+        """set(eSize self, int w, int h)"""
+        return _enigma.eSize_set(self, w, h)
+
+
     def setWidth(self, w):
         """setWidth(eSize self, int w)"""
         return _enigma.eSize_setWidth(self, w)
@@ -3559,6 +3602,7 @@ eSize.isEmpty = new_instancemethod(_enigma.eSize_isEmpty, None, eSize)
 eSize.isValid = new_instancemethod(_enigma.eSize_isValid, None, eSize)
 eSize.width = new_instancemethod(_enigma.eSize_width, None, eSize)
 eSize.height = new_instancemethod(_enigma.eSize_height, None, eSize)
+eSize.set = new_instancemethod(_enigma.eSize_set, None, eSize)
 eSize.setWidth = new_instancemethod(_enigma.eSize_setWidth, None, eSize)
 eSize.setHeight = new_instancemethod(_enigma.eSize_setHeight, None, eSize)
 eSize.transpose = new_instancemethod(_enigma.eSize_transpose, None, eSize)
@@ -3986,6 +4030,48 @@ BLURRY = _enigma.BLURRY
 ANTI_FLUTTER = _enigma.ANTI_FLUTTER
 ANTI_FLUTTER_BLURRY = _enigma.ANTI_FLUTTER_BLURRY
 ANTI_FLUTTER_SHARP = _enigma.ANTI_FLUTTER_SHARP
+class gPainter(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+    RT_HALIGN_LEFT = _enigma.gPainter_RT_HALIGN_LEFT
+    RT_HALIGN_RIGHT = _enigma.gPainter_RT_HALIGN_RIGHT
+    RT_HALIGN_CENTER = _enigma.gPainter_RT_HALIGN_CENTER
+    RT_HALIGN_BLOCK = _enigma.gPainter_RT_HALIGN_BLOCK
+    RT_VALIGN_TOP = _enigma.gPainter_RT_VALIGN_TOP
+    RT_VALIGN_CENTER = _enigma.gPainter_RT_VALIGN_CENTER
+    RT_VALIGN_BOTTOM = _enigma.gPainter_RT_VALIGN_BOTTOM
+    RT_WRAP = _enigma.gPainter_RT_WRAP
+    RT_FILLED_BOX = _enigma.gPainter_RT_FILLED_BOX
+    RT_NO_ELLIPSIS = _enigma.gPainter_RT_NO_ELLIPSIS
+gPainter_swigregister = _enigma.gPainter_swigregister
+gPainter_swigregister(gPainter)
+
+class gDC(iObject):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _enigma.gDC_swiginit(self, _enigma.new_gDC(*args))
+    __swig_destroy__ = _enigma.delete_gDC
+gDC._exec = new_instancemethod(_enigma.gDC__exec, None, gDC)
+gDC.getClip = new_instancemethod(_enigma.gDC_getClip, None, gDC)
+gDC.getPixmap = new_instancemethod(_enigma.gDC_getPixmap, None, gDC)
+gDC.getRGB = new_instancemethod(_enigma.gDC_getRGB, None, gDC)
+gDC.flags = new_instancemethod(_enigma.gDC_flags, None, gDC)
+gDC.size = new_instancemethod(_enigma.gDC_size, None, gDC)
+gDC.pixelFormat = new_instancemethod(_enigma.gDC_pixelFormat, None, gDC)
+gDC.islocked = new_instancemethod(_enigma.gDC_islocked, None, gDC)
+gDC.enableSpinner = new_instancemethod(_enigma.gDC_enableSpinner, None, gDC)
+gDC.disableSpinner = new_instancemethod(_enigma.gDC_disableSpinner, None, gDC)
+gDC.incrementSpinner = new_instancemethod(_enigma.gDC_incrementSpinner, None, gDC)
+gDC.setSpinner = new_instancemethod(_enigma.gDC_setSpinner, None, gDC)
+gDC.checkSpinner = new_instancemethod(_enigma.gDC_checkSpinner, None, gDC)
+gDC_swigregister = _enigma.gDC_swigregister
+gDC_swigregister(gDC)
+
 class iProgressInterpolator(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
@@ -5071,14 +5157,6 @@ class eAnimatedWidget(eWidget):
         return _enigma.eAnimatedWidget_setAlphatest(self, flag)
 
 
-    def doBlit(self, *args):
-        """
-        doBlit(eAnimatedWidget self, gPainter & painter, gPixmapPtr m_pixmap, eRect scaleDest, bool reverse)
-        doBlit(eAnimatedWidget self, gPainter & painter)
-        """
-        return _enigma.eAnimatedWidget_doBlit(self, *args)
-
-
     def prepareForChangeAnimation(self):
         """prepareForChangeAnimation(eAnimatedWidget self) -> bool"""
         return _enigma.eAnimatedWidget_prepareForChangeAnimation(self)
@@ -5089,7 +5167,6 @@ class eAnimatedWidget(eWidget):
         return _enigma.eAnimatedWidget_setDefaultAnimationEnabled(self, enabled)
 
 eAnimatedWidget.setAlphatest = new_instancemethod(_enigma.eAnimatedWidget_setAlphatest, None, eAnimatedWidget)
-eAnimatedWidget.doBlit = new_instancemethod(_enigma.eAnimatedWidget_doBlit, None, eAnimatedWidget)
 eAnimatedWidget.prepareForChangeAnimation = new_instancemethod(_enigma.eAnimatedWidget_prepareForChangeAnimation, None, eAnimatedWidget)
 eAnimatedWidget.setDefaultAnimationEnabled = new_instancemethod(_enigma.eAnimatedWidget_setDefaultAnimationEnabled, None, eAnimatedWidget)
 eAnimatedWidget_swigregister = _enigma.eAnimatedWidget_swigregister
@@ -5105,6 +5182,7 @@ class eLabel(eAnimatedWidget):
         __init__(eLabel self, eWidget parent) -> eLabel
         """
         _enigma.eLabel_swiginit(self, _enigma.new_eLabel(parent, markedPos))
+    __swig_destroy__ = _enigma.delete_eLabel
 
     def setText(self, string):
         """setText(eLabel self, std::string const & string)"""
@@ -5133,6 +5211,7 @@ class eLabel(eAnimatedWidget):
     alignBlock = _enigma.eLabel_alignBlock
     alignCenterOrBottom = _enigma.eLabel_alignCenterOrBottom
     alignCenterOrRight = _enigma.eLabel_alignCenterOrRight
+    alignBottomOrTop = _enigma.eLabel_alignBottomOrTop
 
     def setVAlign(self, align):
         """setVAlign(eLabel self, int align)"""
@@ -5159,6 +5238,11 @@ class eLabel(eAnimatedWidget):
         return _enigma.eLabel_setShadowOffset(self, offset)
 
 
+    def setShadowBlur(self, blur):
+        """setShadowBlur(eLabel self, float blur)"""
+        return _enigma.eLabel_setShadowBlur(self, blur)
+
+
     def setNoWrap(self, nowrap):
         """setNoWrap(eLabel self, int nowrap)"""
         return _enigma.eLabel_setNoWrap(self, nowrap)
@@ -5169,9 +5253,20 @@ class eLabel(eAnimatedWidget):
         return _enigma.eLabel_clearForegroundColor(self)
 
 
-    def setCornerRadius(self, value):
-        """setCornerRadius(eLabel self, unsigned int value)"""
-        return _enigma.eLabel_setCornerRadius(self, value)
+    def setCornerRadius(self, *args):
+        """
+        setCornerRadius(eLabel self, float value, int type)
+        setCornerRadius(eLabel self, float value)
+        """
+        return _enigma.eLabel_setCornerRadius(self, *args)
+
+
+    def setCornerDiameter(self, *args):
+        """
+        setCornerDiameter(eLabel self, float value, int type)
+        setCornerDiameter(eLabel self, float value)
+        """
+        return _enigma.eLabel_setCornerDiameter(self, *args)
 
 
     def setPadding(self, value):
@@ -5179,11 +5274,25 @@ class eLabel(eAnimatedWidget):
         return _enigma.eLabel_setPadding(self, value)
 
 
+    def getPadding(self):
+        """getPadding(eLabel self) -> ePoint"""
+        return _enigma.eLabel_getPadding(self)
+
+
+    def setOffset(self, offset, limit):
+        """setOffset(eLabel self, int offset, int limit)"""
+        return _enigma.eLabel_setOffset(self, offset, limit)
+
+
     def calculateSize(self):
         """calculateSize(eLabel self) -> eSize"""
         return _enigma.eLabel_calculateSize(self)
 
-    __swig_destroy__ = _enigma.delete_eLabel
+
+    def calculateLineHeight(self):
+        """calculateLineHeight(eLabel self) -> int"""
+        return _enigma.eLabel_calculateLineHeight(self)
+
 eLabel.setText = new_instancemethod(_enigma.eLabel_setText, None, eLabel)
 eLabel.setMarkedPos = new_instancemethod(_enigma.eLabel_setMarkedPos, None, eLabel)
 eLabel.setFont = new_instancemethod(_enigma.eLabel_setFont, None, eLabel)
@@ -5193,11 +5302,16 @@ eLabel.setHAlign = new_instancemethod(_enigma.eLabel_setHAlign, None, eLabel)
 eLabel.setForegroundColor = new_instancemethod(_enigma.eLabel_setForegroundColor, None, eLabel)
 eLabel.setShadowColor = new_instancemethod(_enigma.eLabel_setShadowColor, None, eLabel)
 eLabel.setShadowOffset = new_instancemethod(_enigma.eLabel_setShadowOffset, None, eLabel)
+eLabel.setShadowBlur = new_instancemethod(_enigma.eLabel_setShadowBlur, None, eLabel)
 eLabel.setNoWrap = new_instancemethod(_enigma.eLabel_setNoWrap, None, eLabel)
 eLabel.clearForegroundColor = new_instancemethod(_enigma.eLabel_clearForegroundColor, None, eLabel)
 eLabel.setCornerRadius = new_instancemethod(_enigma.eLabel_setCornerRadius, None, eLabel)
+eLabel.setCornerDiameter = new_instancemethod(_enigma.eLabel_setCornerDiameter, None, eLabel)
 eLabel.setPadding = new_instancemethod(_enigma.eLabel_setPadding, None, eLabel)
+eLabel.getPadding = new_instancemethod(_enigma.eLabel_getPadding, None, eLabel)
+eLabel.setOffset = new_instancemethod(_enigma.eLabel_setOffset, None, eLabel)
 eLabel.calculateSize = new_instancemethod(_enigma.eLabel_calculateSize, None, eLabel)
+eLabel.calculateLineHeight = new_instancemethod(_enigma.eLabel_calculateLineHeight, None, eLabel)
 eLabel_swigregister = _enigma.eLabel_swigregister
 eLabel_swigregister(eLabel)
 
@@ -5265,6 +5379,22 @@ class ePixmap(eAnimatedWidget):
         return _enigma.ePixmap_setBorderColor(self, color)
 
 
+    def setCornerRadius(self, *args):
+        """
+        setCornerRadius(ePixmap self, float value, int type)
+        setCornerRadius(ePixmap self, float value)
+        """
+        return _enigma.ePixmap_setCornerRadius(self, *args)
+
+
+    def setCornerDiameter(self, *args):
+        """
+        setCornerDiameter(ePixmap self, float value, int type)
+        setCornerDiameter(ePixmap self, float value)
+        """
+        return _enigma.ePixmap_setCornerDiameter(self, *args)
+
+
     def setGradient(self, arg2, to, direction):
         """setGradient(ePixmap self, gRGBA arg2, gRGBA to, int direction)"""
         return _enigma.ePixmap_setGradient(self, arg2, to, direction)
@@ -5301,6 +5431,8 @@ ePixmap.setScale = new_instancemethod(_enigma.ePixmap_setScale, None, ePixmap)
 ePixmap.setScaleDest = new_instancemethod(_enigma.ePixmap_setScaleDest, None, ePixmap)
 ePixmap.setBorderWidth = new_instancemethod(_enigma.ePixmap_setBorderWidth, None, ePixmap)
 ePixmap.setBorderColor = new_instancemethod(_enigma.ePixmap_setBorderColor, None, ePixmap)
+ePixmap.setCornerRadius = new_instancemethod(_enigma.ePixmap_setCornerRadius, None, ePixmap)
+ePixmap.setCornerDiameter = new_instancemethod(_enigma.ePixmap_setCornerDiameter, None, ePixmap)
 ePixmap.setGradient = new_instancemethod(_enigma.ePixmap_setGradient, None, ePixmap)
 ePixmap.save = new_instancemethod(_enigma.ePixmap_save, None, ePixmap)
 ePixmap_swigregister = _enigma.ePixmap_swigregister
@@ -5643,7 +5775,7 @@ class eWidgetDesktop(object):
 
 
     def setDC(self, dc):
-        """setDC(eWidgetDesktop self, gDC * dc)"""
+        """setDC(eWidgetDesktop self, gDC dc)"""
         return _enigma.eWidgetDesktop_setDC(self, dc)
 
 
@@ -5730,9 +5862,12 @@ class eWidgetDesktop(object):
         return _enigma.eWidgetDesktop_isDimmable(self)
 
 
-    def createScreenshot(self, pm):
-        """createScreenshot(eWidgetDesktop self, gPixmapPtr pm)"""
-        return _enigma.eWidgetDesktop_createScreenshot(self, pm)
+    def createScreenshot(self, *args):
+        """
+        createScreenshot(eWidgetDesktop self, gPixmapPtr pm, eSize dstSize)
+        createScreenshot(eWidgetDesktop self, gPixmapPtr pm)
+        """
+        return _enigma.eWidgetDesktop_createScreenshot(self, *args)
 
 
     def setFrameTime(self, ms):
@@ -5922,6 +6057,11 @@ class eListbox(eWidget):
         return _enigma.eListbox_setSelectionZoom(self, zoom)
 
 
+    def setSelectionRadius(self, radius, radiusType):
+        """setSelectionRadius(eListbox self, float radius, int radiusType)"""
+        return _enigma.eListbox_setSelectionRadius(self, radius, radiusType)
+
+
     def setSelectionEnable(self, en):
         """setSelectionEnable(eListbox self, int en)"""
         return _enigma.eListbox_setSelectionEnable(self, en)
@@ -6060,6 +6200,7 @@ eListbox.setItemHeight = new_instancemethod(_enigma.eListbox_setItemHeight, None
 eListbox.setItemWidth = new_instancemethod(_enigma.eListbox_setItemWidth, None, eListbox)
 eListbox.setMargin = new_instancemethod(_enigma.eListbox_setMargin, None, eListbox)
 eListbox.setSelectionZoom = new_instancemethod(_enigma.eListbox_setSelectionZoom, None, eListbox)
+eListbox.setSelectionRadius = new_instancemethod(_enigma.eListbox_setSelectionRadius, None, eListbox)
 eListbox.setSelectionEnable = new_instancemethod(_enigma.eListbox_setSelectionEnable, None, eListbox)
 eListbox.setBackgroundColor = new_instancemethod(_enigma.eListbox_setBackgroundColor, None, eListbox)
 eListbox.setBackgroundColorSelected = new_instancemethod(_enigma.eListbox_setBackgroundColorSelected, None, eListbox)
@@ -6095,12 +6236,13 @@ class eListboxPythonStringContent(iListboxContent):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
 
-    def __init__(self, default_item_height=0):
+    def __init__(self, *args):
         """
         __init__(eListboxPythonStringContent self, int default_item_height=0) -> eListboxPythonStringContent
         __init__(eListboxPythonStringContent self) -> eListboxPythonStringContent
+        __init__(eListboxPythonStringContent self, int default_item_height, gSurface::RadiusParams const & selectionRadius) -> eListboxPythonStringContent
         """
-        _enigma.eListboxPythonStringContent_swiginit(self, _enigma.new_eListboxPythonStringContent(default_item_height))
+        _enigma.eListboxPythonStringContent_swiginit(self, _enigma.new_eListboxPythonStringContent(*args))
     __swig_destroy__ = _enigma.delete_eListboxPythonStringContent
 
     def setItemHeight(height):
@@ -6108,6 +6250,12 @@ class eListboxPythonStringContent(iListboxContent):
         return _enigma.eListboxPythonStringContent_setItemHeight(height)
 
     setItemHeight = staticmethod(setItemHeight)
+
+    def setItemSelectionRadius(radius, type):
+        """setItemSelectionRadius(float radius, int type)"""
+        return _enigma.eListboxPythonStringContent_setItemSelectionRadius(radius, type)
+
+    setItemSelectionRadius = staticmethod(setItemSelectionRadius)
 
     def setFont(fnt):
         """setFont(gFont fnt)"""
@@ -6169,6 +6317,10 @@ def eListboxPythonStringContent_setItemHeight(height):
     """eListboxPythonStringContent_setItemHeight(int height)"""
     return _enigma.eListboxPythonStringContent_setItemHeight(height)
 
+def eListboxPythonStringContent_setItemSelectionRadius(radius, type):
+    """eListboxPythonStringContent_setItemSelectionRadius(float radius, int type)"""
+    return _enigma.eListboxPythonStringContent_setItemSelectionRadius(radius, type)
+
 def eListboxPythonStringContent_setFont(fnt):
     """eListboxPythonStringContent_setFont(gFont fnt)"""
     return _enigma.eListboxPythonStringContent_setFont(fnt)
@@ -6191,6 +6343,12 @@ class eListboxPythonConfigContent(eListboxPythonStringContent):
 
     setItemHeight = staticmethod(setItemHeight)
 
+    def setItemSelectionRadius(radius, type):
+        """setItemSelectionRadius(float radius, int type)"""
+        return _enigma.eListboxPythonConfigContent_setItemSelectionRadius(radius, type)
+
+    setItemSelectionRadius = staticmethod(setItemSelectionRadius)
+
     def setValueFont(fnt):
         """setValueFont(gFont fnt)"""
         return _enigma.eListboxPythonConfigContent_setValueFont(fnt)
@@ -6208,7 +6366,7 @@ class eListboxPythonConfigContent(eListboxPythonStringContent):
         _enigma.eListboxPythonConfigContent_swiginit(self, _enigma.new_eListboxPythonConfigContent())
 
     def paint(self, painter, style, offset, selected):
-        """paint(eListboxPythonConfigContent self, gPainter & painter, eWindowStyle & style, ePoint offset, int selected)"""
+        """paint(eListboxPythonConfigContent self, gPainter painter, eWindowStyle & style, ePoint offset, int selected)"""
         return _enigma.eListboxPythonConfigContent_paint(self, painter, style, offset, selected)
 
 
@@ -6244,6 +6402,10 @@ def eListboxPythonConfigContent_setItemHeight(height):
     """eListboxPythonConfigContent_setItemHeight(int height)"""
     return _enigma.eListboxPythonConfigContent_setItemHeight(height)
 
+def eListboxPythonConfigContent_setItemSelectionRadius(radius, type):
+    """eListboxPythonConfigContent_setItemSelectionRadius(float radius, int type)"""
+    return _enigma.eListboxPythonConfigContent_setItemSelectionRadius(radius, type)
+
 def eListboxPythonConfigContent_setValueFont(fnt):
     """eListboxPythonConfigContent_setValueFont(gFont fnt)"""
     return _enigma.eListboxPythonConfigContent_setValueFont(fnt)
@@ -6267,9 +6429,11 @@ class eListboxPythonMultiContent(eListboxPythonStringContent):
     TYPE_PIXMAP_ALPHABLEND = _enigma.eListboxPythonMultiContent_TYPE_PIXMAP_ALPHABLEND
     TYPE_PROGRESS_PIXMAP = _enigma.eListboxPythonMultiContent_TYPE_PROGRESS_PIXMAP
     TYPE_TEXT_ALPHABLEND = _enigma.eListboxPythonMultiContent_TYPE_TEXT_ALPHABLEND
+    TYPE_FILL = _enigma.eListboxPythonMultiContent_TYPE_FILL
+    TYPE_FILL_ALPHABLEND = _enigma.eListboxPythonMultiContent_TYPE_FILL_ALPHABLEND
 
     def paint(self, painter, style, offset, selected):
-        """paint(eListboxPythonMultiContent self, gPainter & painter, eWindowStyle & style, ePoint offset, int selected)"""
+        """paint(eListboxPythonMultiContent self, gPainter painter, eWindowStyle & style, ePoint offset, int selected)"""
         return _enigma.eListboxPythonMultiContent_paint(self, painter, style, offset, selected)
 
 
@@ -6372,14 +6536,14 @@ eListboxPythonMultiContent.refresh = new_instancemethod(_enigma.eListboxPythonMu
 eListboxPythonMultiContent_swigregister = _enigma.eListboxPythonMultiContent_swigregister
 eListboxPythonMultiContent_swigregister(eListboxPythonMultiContent)
 
-RT_HALIGN_LEFT = _enigma.RT_HALIGN_LEFT
-RT_HALIGN_RIGHT = _enigma.RT_HALIGN_RIGHT
-RT_HALIGN_CENTER = _enigma.RT_HALIGN_CENTER
-RT_HALIGN_BLOCK = _enigma.RT_HALIGN_BLOCK
-RT_VALIGN_TOP = _enigma.RT_VALIGN_TOP
-RT_VALIGN_CENTER = _enigma.RT_VALIGN_CENTER
-RT_VALIGN_BOTTOM = _enigma.RT_VALIGN_BOTTOM
-RT_WRAP = _enigma.RT_WRAP
+GRADIENT_TYPE_NONE = _enigma.GRADIENT_TYPE_NONE
+GRADIENT_TYPE_SIMPLE = _enigma.GRADIENT_TYPE_SIMPLE
+GRADIENT_TYPE_CENTERED = _enigma.GRADIENT_TYPE_CENTERED
+RADIUS_TYPE_ALL = _enigma.RADIUS_TYPE_ALL
+RADIUS_TYPE_TOP = _enigma.RADIUS_TYPE_TOP
+RADIUS_TYPE_BOTTOM = _enigma.RADIUS_TYPE_BOTTOM
+RADIUS_TYPE_LEFT = _enigma.RADIUS_TYPE_LEFT
+RADIUS_TYPE_RIGHT = _enigma.RADIUS_TYPE_RIGHT
 SCALE_NONE = _enigma.SCALE_NONE
 SCALE_CENTER = _enigma.SCALE_CENTER
 SCALE_ASPECT = _enigma.SCALE_ASPECT
@@ -6473,7 +6637,7 @@ class eWindowStyleSkinned(object):
         _enigma.eWindowStyleSkinned_swiginit(self, _enigma.new_eWindowStyleSkinned())
 
     def setStyle(self, painter, what):
-        """setStyle(eWindowStyleSkinned self, gPainter & painter, int what)"""
+        """setStyle(eWindowStyleSkinned self, gPainter painter, int what)"""
         return _enigma.eWindowStyleSkinned_setStyle(self, painter, what)
 
     bsWindow = _enigma.eWindowStyleSkinned_bsWindow
@@ -6680,10 +6844,20 @@ class eVideoWidget(eWidget):
         """setFBSize(eVideoWidget self, eSize size)"""
         return _enigma.eVideoWidget_setFBSize(self, size)
 
+
+    def setFullsize():
+        """setFullsize()"""
+        return _enigma.eVideoWidget_setFullsize()
+
+    setFullsize = staticmethod(setFullsize)
 eVideoWidget.setDecoder = new_instancemethod(_enigma.eVideoWidget_setDecoder, None, eVideoWidget)
 eVideoWidget.setFBSize = new_instancemethod(_enigma.eVideoWidget_setFBSize, None, eVideoWidget)
 eVideoWidget_swigregister = _enigma.eVideoWidget_swigregister
 eVideoWidget_swigregister(eVideoWidget)
+
+def eVideoWidget_setFullsize():
+    """eVideoWidget_setFullsize()"""
+    return _enigma.eVideoWidget_setFullsize()
 
 class eSubtitleWidget(eWidget):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
@@ -6725,9 +6899,12 @@ class eSubtitleWidget(eWidget):
     Subtitle_Italic = _enigma.eSubtitleWidget_Subtitle_Italic
     Subtitle_MAX = _enigma.eSubtitleWidget_Subtitle_MAX
 
-    def setFontStyle(face, font, autoColor, col, shadowCol, shadowOffset):
-        """setFontStyle(eSubtitleWidget::subfont_t face, gFont font, int autoColor, gRGB col, gRGB shadowCol, ePoint shadowOffset)"""
-        return _enigma.eSubtitleWidget_setFontStyle(face, font, autoColor, col, shadowCol, shadowOffset)
+    def setFontStyle(face, font, autoColor, col, shadowCol, shadowOffset, shadowBlur=1.0):
+        """
+        setFontStyle(eSubtitleWidget::subfont_t face, gFont font, int autoColor, gRGB col, gRGB shadowCol, ePoint shadowOffset, float shadowBlur=1.0)
+        setFontStyle(eSubtitleWidget::subfont_t face, gFont font, int autoColor, gRGB col, gRGB shadowCol, ePoint shadowOffset)
+        """
+        return _enigma.eSubtitleWidget_setFontStyle(face, font, autoColor, col, shadowCol, shadowOffset, shadowBlur)
 
     setFontStyle = staticmethod(setFontStyle)
     __swig_destroy__ = _enigma.delete_eSubtitleWidget
@@ -6738,9 +6915,12 @@ eSubtitleWidget.setFullscreenPixmap = new_instancemethod(_enigma.eSubtitleWidget
 eSubtitleWidget_swigregister = _enigma.eSubtitleWidget_swigregister
 eSubtitleWidget_swigregister(eSubtitleWidget)
 
-def eSubtitleWidget_setFontStyle(face, font, autoColor, col, shadowCol, shadowOffset):
-    """eSubtitleWidget_setFontStyle(eSubtitleWidget::subfont_t face, gFont font, int autoColor, gRGB col, gRGB shadowCol, ePoint shadowOffset)"""
-    return _enigma.eSubtitleWidget_setFontStyle(face, font, autoColor, col, shadowCol, shadowOffset)
+def eSubtitleWidget_setFontStyle(face, font, autoColor, col, shadowCol, shadowOffset, shadowBlur=1.0):
+    """
+    setFontStyle(eSubtitleWidget::subfont_t face, gFont font, int autoColor, gRGB col, gRGB shadowCol, ePoint shadowOffset, float shadowBlur=1.0)
+    eSubtitleWidget_setFontStyle(eSubtitleWidget::subfont_t face, gFont font, int autoColor, gRGB col, gRGB shadowCol, ePoint shadowOffset)
+    """
+    return _enigma.eSubtitleWidget_setFontStyle(face, font, autoColor, col, shadowCol, shadowOffset, shadowBlur)
 
 class Teletext(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
@@ -7645,6 +7825,7 @@ iDVBChannelPtr.__deref__ = new_instancemethod(_enigma.iDVBChannelPtr___deref__, 
 iDVBChannelPtr.getFrontend = new_instancemethod(_enigma.iDVBChannelPtr_getFrontend, None, iDVBChannelPtr)
 iDVBChannelPtr.requestTsidOnid = new_instancemethod(_enigma.iDVBChannelPtr_requestTsidOnid, None, iDVBChannelPtr)
 iDVBChannelPtr.reserveDemux = new_instancemethod(_enigma.iDVBChannelPtr_reserveDemux, None, iDVBChannelPtr)
+iDVBChannelPtr.getType = new_instancemethod(_enigma.iDVBChannelPtr_getType, None, iDVBChannelPtr)
 iDVBChannelPtr_swigregister = _enigma.iDVBChannelPtr_swigregister
 iDVBChannelPtr_swigregister(iDVBChannelPtr)
 
@@ -10971,6 +11152,16 @@ class eDisplayManager(object):
         return _enigma.eDisplayManager_getAvailableHDR12BitModes(self, INOUT)
 
 
+    def getPhysicalScreenSize(self):
+        """getPhysicalScreenSize(eDisplayManager self) -> eSize"""
+        return _enigma.eDisplayManager_getPhysicalScreenSize(self)
+
+
+    def getDPI(self):
+        """getDPI(eDisplayManager self) -> int"""
+        return _enigma.eDisplayManager_getDPI(self)
+
+
     def getCurrentMode(self):
         """getCurrentMode(eDisplayManager self) -> eVideoMode"""
         return _enigma.eDisplayManager_getCurrentMode(self)
@@ -11145,6 +11336,8 @@ eDisplayManager.getAvailableHLGSupportModes = new_instancemethod(_enigma.eDispla
 eDisplayManager.getAvailableHDR10SupportModes = new_instancemethod(_enigma.eDisplayManager_getAvailableHDR10SupportModes, None, eDisplayManager)
 eDisplayManager.getAvailableHDR10BitModes = new_instancemethod(_enigma.eDisplayManager_getAvailableHDR10BitModes, None, eDisplayManager)
 eDisplayManager.getAvailableHDR12BitModes = new_instancemethod(_enigma.eDisplayManager_getAvailableHDR12BitModes, None, eDisplayManager)
+eDisplayManager.getPhysicalScreenSize = new_instancemethod(_enigma.eDisplayManager_getPhysicalScreenSize, None, eDisplayManager)
+eDisplayManager.getDPI = new_instancemethod(_enigma.eDisplayManager_getDPI, None, eDisplayManager)
 eDisplayManager.getCurrentMode = new_instancemethod(_enigma.eDisplayManager_getCurrentMode, None, eDisplayManager)
 eDisplayManager.setCurrentMode = new_instancemethod(_enigma.eDisplayManager_setCurrentMode, None, eDisplayManager)
 eDisplayManager.getAspect = new_instancemethod(_enigma.eDisplayManager_getAspect, None, eDisplayManager)
@@ -11782,8 +11975,14 @@ class eLCD(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
 
     def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
+        raise AttributeError("No constructor defined - class is abstract")
     __repr__ = _swig_repr
+
+    def getInstance():
+        """getInstance() -> eLCD"""
+        return _enigma.eLCD_getInstance()
+
+    getInstance = staticmethod(getInstance)
 
     def lock(self, close_device=False):
         """
@@ -11803,6 +12002,26 @@ class eLCD(object):
         return _enigma.eLCD_islocked(self)
 
 
+    def setLCDBrightness(self, brightness):
+        """setLCDBrightness(eLCD self, int brightness) -> int"""
+        return _enigma.eLCD_setLCDBrightness(self, brightness)
+
+
+    def setInverted(self, arg2):
+        """setInverted(eLCD self, bool arg2)"""
+        return _enigma.eLCD_setInverted(self, arg2)
+
+
+    def isOled(self):
+        """isOled(eLCD self) -> bool"""
+        return _enigma.eLCD_isOled(self)
+
+
+    def setBootProgress(self, progress):
+        """setBootProgress(eLCD self, int progress)"""
+        return _enigma.eLCD_setBootProgress(self, progress)
+
+
     def detected(self):
         """detected(eLCD self) -> bool"""
         return _enigma.eLCD_detected(self)
@@ -11810,52 +12029,17 @@ class eLCD(object):
 eLCD.lock = new_instancemethod(_enigma.eLCD_lock, None, eLCD)
 eLCD.unlock = new_instancemethod(_enigma.eLCD_unlock, None, eLCD)
 eLCD.islocked = new_instancemethod(_enigma.eLCD_islocked, None, eLCD)
+eLCD.setLCDBrightness = new_instancemethod(_enigma.eLCD_setLCDBrightness, None, eLCD)
+eLCD.setInverted = new_instancemethod(_enigma.eLCD_setInverted, None, eLCD)
+eLCD.isOled = new_instancemethod(_enigma.eLCD_isOled, None, eLCD)
+eLCD.setBootProgress = new_instancemethod(_enigma.eLCD_setBootProgress, None, eLCD)
 eLCD.detected = new_instancemethod(_enigma.eLCD_detected, None, eLCD)
 eLCD_swigregister = _enigma.eLCD_swigregister
 eLCD_swigregister(eLCD)
 
-class eDBoxLCD(eLCD):
-    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def getInstance():
-        """getInstance() -> eDBoxLCD"""
-        return _enigma.eDBoxLCD_getInstance()
-
-    getInstance = staticmethod(getInstance)
-
-    def setLCDBrightness(self, brightness):
-        """setLCDBrightness(eDBoxLCD self, int brightness) -> int"""
-        return _enigma.eDBoxLCD_setLCDBrightness(self, brightness)
-
-
-    def setInverted(self, arg2):
-        """setInverted(eDBoxLCD self, bool arg2)"""
-        return _enigma.eDBoxLCD_setInverted(self, arg2)
-
-
-    def isOled(self):
-        """isOled(eDBoxLCD self) -> bool"""
-        return _enigma.eDBoxLCD_isOled(self)
-
-
-    def update(self):
-        """update(eDBoxLCD self)"""
-        return _enigma.eDBoxLCD_update(self)
-
-eDBoxLCD.setLCDBrightness = new_instancemethod(_enigma.eDBoxLCD_setLCDBrightness, None, eDBoxLCD)
-eDBoxLCD.setInverted = new_instancemethod(_enigma.eDBoxLCD_setInverted, None, eDBoxLCD)
-eDBoxLCD.isOled = new_instancemethod(_enigma.eDBoxLCD_isOled, None, eDBoxLCD)
-eDBoxLCD.update = new_instancemethod(_enigma.eDBoxLCD_update, None, eDBoxLCD)
-eDBoxLCD_swigregister = _enigma.eDBoxLCD_swigregister
-eDBoxLCD_swigregister(eDBoxLCD)
-
-def eDBoxLCD_getInstance():
-    """eDBoxLCD_getInstance() -> eDBoxLCD"""
-    return _enigma.eDBoxLCD_getInstance()
+def eLCD_getInstance():
+    """eLCD_getInstance() -> eLCD"""
+    return _enigma.eLCD_getInstance()
 
 class eMMI_UI(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
@@ -15758,6 +15942,21 @@ eStreamProcessorFactories_swigregister(eStreamProcessorFactories)
 
 
 """
+Provides backwards compatible text alignment flags
+"""
+RT_HALIGN_LEFT = gPainter.RT_HALIGN_LEFT
+RT_HALIGN_RIGHT = gPainter.RT_HALIGN_RIGHT
+RT_HALIGN_CENTER = gPainter.RT_HALIGN_CENTER
+RT_HALIGN_BLOCK = gPainter.RT_HALIGN_BLOCK
+RT_VALIGN_TOP = gPainter.RT_VALIGN_TOP
+RT_VALIGN_CENTER = gPainter.RT_VALIGN_CENTER
+RT_VALIGN_BOTTOM = gPainter.RT_VALIGN_BOTTOM
+RT_WRAP = gPainter.RT_WRAP
+RT_FILLED_BOX = gPainter.RT_FILLED_BOX
+RT_NO_ELLIPSIS = gPainter.RT_NO_ELLIPSIS
+
+
+"""
 Provides an implementation of a WeakMethodReference
 for weak references to functions and methods.
 
@@ -17969,6 +18168,10 @@ def runMainloop():
 def quitMainloop(exit_code):
     """quitMainloop(int exit_code)"""
     return _enigma.quitMainloop(exit_code)
+
+def setCurrentSkin(skin):
+    """setCurrentSkin(std::string const & skin)"""
+    return _enigma.setCurrentSkin(skin)
 
 def getEnigmaVersionString():
     """getEnigmaVersionString() -> char const *"""

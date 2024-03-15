@@ -8,7 +8,7 @@ from os.path import dirname
 
 profile("LOAD:enigma_skin")
 from enigma import eSize, ePoint, gFont, eWindow, eLabel, ePixmap, eWindowStyleManager, \
-	addFont, gRGB, eWindowStyleSkinned, eWindowStyleScrollbar, eListboxPythonStringContent, eListboxPythonConfigContent, eListbox
+	addFont, gRGB, eWindowStyleSkinned, eWindowStyleScrollbar, eListboxPythonStringContent, eListboxPythonConfigContent, eListbox, setCurrentSkin
 from Components.config import ConfigSubsection, ConfigText, config, ConfigBoolean
 from Components.Sources.Source import ObsoleteSource
 from Tools.Directories import resolveFilename, SCOPE_SKIN, SCOPE_SKIN_IMAGE, SCOPE_FONTS, SCOPE_CURRENT_SKIN, SCOPE_CONFIG, fileExists
@@ -94,6 +94,8 @@ except (SkinError, IOError, AssertionError) as err:
 	print("defaulting to standard skin...")
 	config.skin.primary_skin.value = 'skin.xml'
 	loadSkin('skin.xml')
+
+setCurrentSkin(config.skin.primary_skin.value)
 
 yres = getSkinYRes(dom_skins[-1][1])
 Log.i("Skin resultion is %s" %(yres,))
@@ -228,6 +230,26 @@ def loadPixmap(path, desktop, size=eSize()):
 		raise SkinError("pixmap file %s not found!" % (path))
 	return ptr
 
+def applyCornerRadius(value, fnc, multiply = 1):
+	"""
+		RADIUS_TYPE_ALL = 1,
+		RADIUS_TYPE_TOP = 2,
+		RADIUS_TYPE_BOTTOM = 4,
+		RADIUS_TYPE_LEFT = 8,
+		RADIUS_TYPE_RIGHT = 16,
+	"""
+	rlut = {
+		"all" : 1,
+		"top" : 2,
+		"bottom" : 4,
+		"left" : 8,
+		"right" : 16
+	}
+	values = value.split(",")
+	dia = float(values[0]) * multiply
+	tp = rlut.get(values[1], 1) if len(values) > 1 else 1
+	fnc(dia, tp)
+
 def applySingleAttribute(guiObject, desktop, attrib, value, scale = ((1,1),(1,1))):
 	# and set attributes
 	if attrib == 'position':
@@ -257,6 +279,10 @@ def applySingleAttribute(guiObject, desktop, attrib, value, scale = ((1,1),(1,1)
 		guiObject.setMargin(ePoint(leftRight, topBottom))
 	elif attrib == 'selectionZoom':
 		guiObject.setSelectionZoom(float(value))
+	elif attrib  == 'selectionRadius':
+		applyCornerRadius(value, guiObject.setSelectionRadius)
+	elif attrib in ('selectionDiameter', 'selectionDia'):
+		applyCornerRadius(value, guiObject.setSelectionRadius, 0.5)
 	elif attrib in ("pixmap", "backgroundPixmap", "selectionPixmap", "scrollbarSliderPicture", "scrollbarSliderBackgroundPicture", "scrollbarValuePicture"):
 		if attrib == "pixmap" and value.endswith("svg"):
 			ptr = loadPixmap(value, desktop, guiObject.size())
@@ -322,10 +348,11 @@ def applySingleAttribute(guiObject, desktop, attrib, value, scale = ((1,1),(1,1)
 				{ "top": guiObject.alignTop,
 					"center": guiObject.alignCenter,
 					"bottom": guiObject.alignBottom,
-					"centerOrBottom" : guiObject.alignCenterOrBottom
+					"centerOrBottom" : guiObject.alignCenterOrBottom,
+					"bottomOrTop" : guiObject.alignBottomOrTop,
 				}[value])
 		except KeyError:
-			print("valign must be either top, center, bottom or centerOrBottom!")
+			print("valign must be either top, center, bottom, centerOrBottom, bottomOrTop!")
 	elif attrib == "halign":
 		try:
 			guiObject.setHAlign(
@@ -336,7 +363,7 @@ def applySingleAttribute(guiObject, desktop, attrib, value, scale = ((1,1),(1,1)
 					"centerOrRight": guiObject.alignCenterOrRight
 				}[value])
 		except KeyError:
-			print("halign must be either left, center, right, block or centerOrRight!")
+			Log.w("halign must be either left, center, right, block or centerOrRight but is {f}}!".format(value))
 	elif attrib == "flags":
 		flags = value.split(',')
 		for f in flags:
@@ -347,8 +374,8 @@ def applySingleAttribute(guiObject, desktop, attrib, value, scale = ((1,1),(1,1)
 				print("illegal flag %s!" % f)
 	elif attrib == "padding":
 		guiObject.setPadding(parsePosition(value, scale))
-	elif attrib in ("radius", "cornerRadius"):
-		guiObject.setCornerRadius(int(value))
+	elif attrib in ("radius", "cornerRadius", "cornerDia", "cornerDiameter"):
+		applyCornerRadius(value, guiObject.setCornerDiameter)
 	elif attrib == "gradient":
 		values = value.split(',')
 		direction = {
@@ -405,6 +432,8 @@ def applySingleAttribute(guiObject, desktop, attrib, value, scale = ((1,1),(1,1)
 		guiObject.setPointer({"pointer": 0, "seek_pointer": 1, "progress_pointer": 2}[attrib], ptr, pos)
 	elif attrib == 'shadowOffset':
 		guiObject.setShadowOffset(parsePosition(value, scale))
+	elif attrib == 'shadowBlur':
+		guiObject.setShadowBlur(float(value))
 	elif attrib == 'noWrap':
 		guiObject.setNoWrap(1)
 	elif attrib == 'id':
@@ -514,8 +543,16 @@ def loadSingleSkinData(desktop, skin, path_prefix):
 			if name and value:
 				if name == "string_item_height":
 					eListboxPythonStringContent.setItemHeight(parseValue(value))
+				elif name == "string_item_selection_radius":
+					applyCornerRadius(value, eListboxPythonStringContent.setItemSelectionRadius)
+				elif name == "string_item_selection_dia":
+					applyCornerRadius(value, eListboxPythonStringContent.setItemSelectionRadius, 0.5)
 				elif name == "config_item_height":
 					eListboxPythonConfigContent.setItemHeight(parseValue(value))
+				elif name == "config_item_selection_radius":
+					applyCornerRadius(value, eListboxPythonConfigContent.setItemSelectionRadius)
+				elif name == "config_item_selection_dia":
+					applyCornerRadius(value, eListboxPythonConfigContent.setItemSelectionRadius, 0.5)
 				else:
 					raise SkinError("got listboxcontent value '%s' but 'string_item_height' or 'config_item_height' is allowed only" % name)
 		for cfgpm in c.findall("config"):
@@ -569,8 +606,9 @@ def loadSingleSkinData(desktop, skin, path_prefix):
 			else:
 				shadowColor = gRGB(0)
 			shadowOffset = parsePosition(get_attr("shadowOffset"), scale)
+			shadowBlur = float(get_attr("shadowBlur", 0.0))
 			face = eSubtitleWidget.__dict__[get_attr("name")]
-			eSubtitleWidget.setFontStyle(face, font, haveColor, foregroundColor, shadowColor, shadowOffset)
+			eSubtitleWidget.setFontStyle(face, font, haveColor, foregroundColor, shadowColor, shadowOffset, shadowBlur)
 
 	for windowstyle in skin.findall("windowstyle"):
 		style = eWindowStyleSkinned()
@@ -607,7 +645,7 @@ def loadSingleSkinData(desktop, skin, path_prefix):
 				elif "color" in pixmap.attrib:
 					color = parseColor(get_attr("color"))
 					size = int(get_attr("size"))
-					Log.w("%s: %s @ %s" %(bpName, color.argb(), size))
+					Log.i("%s: #%08x @ %s" %(bpName, color.argb(), size))
 					style.setColorBorder(eWindowStyleSkinned.__dict__[bsName], eWindowStyleSkinned.__dict__[bpName], color, size)
 
 		for color in windowstyle.findall("color"):

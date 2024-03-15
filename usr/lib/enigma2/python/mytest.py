@@ -1,7 +1,9 @@
 from __future__ import division
 from __future__ import print_function
 from Tools.Log import Log
+from Tools.Profile import profile, profile_final
 
+profile("Install:reactor")
 try:
 	import twisted.python.runtime
 	twisted.python.runtime.platform.supportsThreads = lambda: True
@@ -11,13 +13,16 @@ try:
 except:
 	pass
 
+profile("Import:enigma,configfile")
 import enigma
+enigma.eDBoxLCD = enigma.eLCD
 
 from enigma import ePythonConfigQuery
 from Components.config import configfile
-from Screens.SetupGuide import SetupGuide
+
 queryFunc_conn = ePythonConfigQuery.getQueryFuncSignal().connect(configfile.getResolvedKey)
 
+profile("Import:Standby")
 from Screens import Standby
 
 def gPixmapPtr_deref(self):
@@ -84,28 +89,24 @@ def iUriService_ptrValid(self):
 	return True
 enigma.iUriService.ptrValid = iUriService_ptrValid
 
-from Tools.Profile import profile, profile_final
-
 profile("PYTHON_START")
 
 from enigma import runMainloop, eDVBDB, eTimer, quitMainloop, \
 	getDesktop, eAVSwitch, eServiceEvent, \
 	eEPGCache
 
-profile("LOAD:resourcemanager")
 from Components.ResourceManager import resourcemanager
 
-profile("LOAD:api")
 from API import api
 
-profile("ImageDefaults")
+profile("LOAD:ImageDefaultInstaller")
 from Components.DreamInfoHandler import ImageDefaultInstaller
 ImageDefaultInstaller()
 
 profile("LOAD:harddiskmanager")
 from Components.Harddisk import harddiskmanager
 
-profile("LANGUAGE")
+profile("LOAD:LANGUAGE")
 from Components.Language import language
 
 def setEPGLanguage():
@@ -122,26 +123,22 @@ from Screens.SimpleSummary import SimpleSummary
 
 from sys import stdout, exc_info
 
-profile("Bouquets")
 eDVBDB.getInstance().reloadBouquets()
 
-profile("ParentalControl")
 from Components.ParentalControl import InitParentalControl
 InitParentalControl()
 
-profile("LOAD:Navigation")
 from Navigation import Navigation
 
-profile("LOAD:skin")
 from skin import readSkin, SkinError
 
-profile("LOAD:Tools")
 from Tools.Directories import InitFallbackFiles, resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_PLUGINS, SCOPE_CONFIG
 from Components.config import config, configfile, ConfigText, ConfigYesNo, ConfigInteger, ConfigSelection, NoSave, ConfigSubsection
 InitFallbackFiles()
 
-profile("config.misc")
+profile("INIT:config.misc")
 
+config.misc.bootprogressbg = ConfigText(default="/usr/share/enigma2/skin_default/display_bg_dark.svg")
 config.misc.radiopic = ConfigText(default = resolveFilename(SCOPE_CURRENT_SKIN, "radio.mvi"))
 config.misc.isNextRecordTimerAfterEventActionAuto = ConfigYesNo(default=False)
 config.misc.useTransponderTime = ConfigYesNo(default=True)
@@ -163,6 +160,8 @@ config.misc.fileWatchVerboseDebug = ConfigYesNo(default=False)
 config.mediaplayer = ConfigSubsection()
 config.mediaplayer.useAlternateUserAgent = NoSave(ConfigYesNo(default=False))
 config.mediaplayer.alternateUserAgent = ConfigText(default="")
+
+QUIT_MAINLOOP_TRANSLATIONS = (_("Rebooting..."), _("Shutting Down..."), _("Rebooting to rescue..."), _("Restarting UI..."))
 
 def setEPGCachePath(configElement):
 	eEPGCache.getInstance().setCacheFile(configElement.value)
@@ -206,7 +205,6 @@ def fileWatchVerboseDebugChanged(configElement):
 	enigma.eFileWatch.setVerboseDebug(configElement.value)
 config.misc.fileWatchVerboseDebug.addNotifier(fileWatchVerboseDebugChanged)
 
-profile("Twisted")
 try:
 	from twisted.internet import reactor
 	def runReactor():
@@ -219,25 +217,17 @@ except ImportError:
 	def runReactor():
 		runMainloop()
 
-profile("LOAD:API")
 from API import registerAPIs
 registerAPIs()
 
-profile("LOAD:Plugin")
 # initialize autorun plugins and plugin menu entries
 from Components.PluginComponent import plugins
 from Plugins.Plugin import PluginDescriptor
 plugins.runEarlyPlugins(resolveFilename(SCOPE_PLUGINS))
 
-profile("LOAD:Wizard")
-from Screens.Wizard import wizardManager
-from Screens.DefaultWizard import *
-from Screens.StartWizard import *
-from Screens.TutorialWizard import *
 import Screens.Rc
 from Tools.BoundFunction import boundFunction
 
-profile("misc")
 had = dict()
 
 def dump(dir, p = ""):
@@ -261,7 +251,6 @@ def dump(dir, p = ""):
 profile("LOAD:ScreenGlobals")
 from Screens.SessionGlobals import SessionGlobals
 from Screens.Screen import Screen
-profile("Screen")
 
 # Session.open:
 # * push current active dialog ('current_dialog') onto stack
@@ -320,6 +309,7 @@ class Session:
 		from Components.FrontPanelLed import frontPanelLed
 		frontPanelLed.init(self)
 		for p in plugins.getPlugins(PluginDescriptor.WHERE_SESSIONSTART):
+			profile("LOAD:Plugin-SessionStart: {0}".format(p.path.split("/")[-1]))
 			p(reason=0, session=self)
 
 	def processDelay(self):
@@ -534,7 +524,7 @@ class Session:
 		if self.summary is not None:
 			self.summary.show()
 
-profile("Standby,PowerKey")
+profile("LOAD:Standby,PowerKey,CI, VolumeControl")
 import Screens.Standby
 from Screens.Menu import MainMenu, mdom
 from GlobalActions import globalActionMap
@@ -593,7 +583,6 @@ class PowerKey:
 		if not Screens.Standby.inStandby and self.session.current_dialog and self.session.current_dialog.ALLOW_SUSPEND and self.session.in_exec:
 			self.session.open(Screens.Standby.Standby)
 
-profile("Scart")
 from Screens.Scart import Scart
 
 class AutoScartControl:
@@ -619,23 +608,24 @@ class AutoScartControl:
 			else:
 				self.scartDialog.switchToTV()
 
-profile("Load:CI")
 from enigma import eDVBCIInterfaces
 from Screens.Ci import CiHandler
 
-profile("Load:VolumeControl")
 from Components.VolumeControl import VolumeControl
 
 def runScreenTest():
 	config.misc.startCounter.value += 1
 
-	profile("Init:Session")
+	profile("Init:Navigation")
 	nav = Navigation(config.misc.isNextRecordTimerAfterEventActionAuto.value)
+	profile("Init:Session")
 	session = Session(desktop = getDesktop(0), summary_desktop = getDesktop(1), navigation = nav)
+
 
 	from Components.ScreenAnimations import ScreenAnimations
 	ScreenAnimations().loadDefault()
 
+	profile("Session:ToastManager, CiHandler")
 	from Screens.Toast import ToastManager
 	session.toastManager = ToastManager(session)
 
@@ -646,10 +636,11 @@ def runScreenTest():
 		PackageRestoreCheck(session)
 	except:
 		pass
-
+	profile("Init:screensToRun")
 	screensToRun = [ p.__call__ for p in plugins.getPlugins(PluginDescriptor.WHERE_WIZARD) ]
 
-	profile("SetupGuide")
+	profile("Init:SetupGuide")
+	from Screens.SetupGuide import SetupGuide
 	if config.misc.firstrun.value:
 		screensToRun.append((20,SetupGuide))
 	screensToRun.append((100, Screens.InfoBar.InfoBar))
@@ -692,7 +683,7 @@ def runScreenTest():
 	# we need session.scart to access it from within menu.xml
 	session.scart = AutoScartControl(session)
 
-	profile("RunReactor")
+	profile("Session:runReactor")
 	profile_final()
 	from Components.FrontPanelLed import FrontPanelLed
 	runReactor()
@@ -743,6 +734,9 @@ def runScreenTest():
 	config.misc.isNextRecordTimerAfterEventActionAuto.save()
 
 	profile("stopService")
+	if hasattr(session, "pip") and session.pip:
+		session.deleteDialog(session.pip)
+		del session.pip
 	session.nav.stopService()
 	profile("nav shutdown")
 	session.nav.shutdown()
@@ -756,7 +750,7 @@ profile("Init:skin")
 import skin
 skin.loadSkinData(getDesktop(0))
 
-profile("InputDevice")
+profile("Init:InputDevice")
 import Components.InputDevice
 Components.InputDevice.InitInputDevices()
 
@@ -764,24 +758,22 @@ profile("AVSwitch")
 import Components.AVSwitch
 Components.AVSwitch.InitAVSwitch()
 
-profile("RecordingConfig")
+profile("Init:RecordingConfig, UsageConfig")
 import Components.RecordingConfig
 Components.RecordingConfig.InitRecordingConfig()
 
-profile("UsageConfig")
 import Components.UsageConfig
 Components.UsageConfig.BaseInitUsageConfig()
 language.addCallback(Components.UsageConfig.FinalInitUsageConfig)
 
-profile("keymapparser")
+profile("Init:keymapparser, LCD")
 import keymapparser
 keymapparser.readKeymap(config.usage.keymap.value)
 
-profile("LCD")
 import Components.Lcd
 Components.Lcd.InitLcd()
 
-profile("SetupDevices")
+profile("Init:SetupDevices")
 import Components.SetupDevices
 Components.SetupDevices.InitSetupDevices()
 

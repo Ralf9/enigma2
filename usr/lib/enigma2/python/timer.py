@@ -1,10 +1,12 @@
 from __future__ import print_function
+from enigma import eTimer
+from Tools.Log import Log
+
 from bisect import insort
 from time import strftime, time, localtime, mktime
-from enigma import eTimer
 import datetime
 
-import NavigationInstance
+
 
 class TimerEntry:
 	StateWaiting  = 0
@@ -36,7 +38,7 @@ class TimerEntry:
 
 	def setRepeated(self, day):
 		self.repeated |= (2 ** day)
-		print("Repeated: " + str(self.repeated))
+		Log.i("Repeated: " + str(self.repeated))
 		
 	def isRunning(self):
 		return self.state == self.StateRunning
@@ -50,7 +52,7 @@ class TimerEntry:
 		
 	# update self.begin and self.end according to the self.repeated-flags
 	def processRepeated(self, findRunningEvent = True):
-		print("ProcessRepeated")
+		Log.i("ProcessRepeated")
 		if (self.repeated != 0):
 			now = int(time()) + 1
 
@@ -60,17 +62,17 @@ class TimerEntry:
 			localend = localtime(self.end)
 			localnow = localtime(now)
 
-			print("localrepeatedbegindate:", strftime("%c", localrepeatedbegindate))
-			print("localbegin:", strftime("%c", localbegin))
-			print("localend:", strftime("%c", localend))
-			print("localnow:", strftime("%c", localnow))
+			Log.i("localrepeatedbegindate: %s" %(strftime("%c", localrepeatedbegindate)))
+			Log.i("localbegin: %s" %(strftime("%c", localbegin)))
+			Log.i("localend: %s" %(strftime("%c", localend)))
+			Log.i("localnow: %s" %(strftime("%c", localnow)))
 
 			day = []
 			flags = self.repeated
 			for x in (0, 1, 2, 3, 4, 5, 6):
 				if (flags & 1 == 1):
 					day.append(0)
-					print("Day: " + str(x))
+					Log.i("Day: " + str(x))
 				else:
 					day.append(1)
 				flags = flags >> 1
@@ -81,8 +83,8 @@ class TimerEntry:
 				((day[localbegin.tm_wday] == 0) and ((findRunningEvent and localend < localnow) or ((not findRunningEvent) and localbegin < localnow)))):
 				localbegin = self.addOneDay(localbegin)
 				localend = self.addOneDay(localend)
-				print("localbegin after addOneDay:", strftime("%c", localbegin))
-				print("localend after addOneDay:", strftime("%c", localend))
+				Log.i("localbegin after addOneDay: %s" %(strftime("%c", localbegin)))
+				Log.i("localend after addOneDay: %s"  %(strftime("%c", localend)))
 				
 			#we now have a struct_time representation of begin and end in localtime, but we have to calculate back to (gmt) seconds since epoch
 			self.begin = int(mktime(localbegin))
@@ -90,9 +92,9 @@ class TimerEntry:
 			if self.begin == self.end:
 				self.end += 1
 
-			print("ProcessRepeated result")
-			print(strftime("%c", localtime(self.begin)))
-			print(strftime("%c", localtime(self.end)))
+			Log.i("ProcessRepeated result")
+			Log.i(strftime("%c", localtime(self.begin)))
+			Log.i(strftime("%c", localtime(self.end)))
 
 			self.timeChanged()
 
@@ -204,14 +206,14 @@ class Timer:
 	
 	def setNextActivation(self, when):
 		delay = int((when - time()) * 1000)
-		print("[timer.py] next activation: %d (in %d ms)" % (when, delay))
+		Log.i("Next activation: %s (in %d ms)" % (strftime("%c", localtime(when)), delay))
 		
 		self.timer.start(delay, 1)
 		self.next = when
 
 	def calcNextActivation(self):
 		if self.lastActivation > time():
-			print("[timer.py] timewarp - re-evaluating all processed timers.")
+			Log.i("Timewarp - re-evaluating all processed timers.")
 			tl = self.processed_timers
 			self.processed_timers = [ ]
 			for x in tl:
@@ -231,12 +233,12 @@ class Timer:
 			if w < min:
 				min = w
 			else:
-				print("next real activation is", strftime("%c", localtime(w)))
+				Log.i("next real activation is %s" %(strftime("%c", localtime(w))))
 		
 		self.setNextActivation(min)
 	
 	def timeChanged(self, timer):
-		print("time changed")
+		Log.i("time changed")
 		timer.timeChanged()
 		if timer.state == TimerEntry.StateEnded:
 			self.processed_timers.remove(timer)
@@ -278,7 +280,7 @@ class Timer:
 		self.stateChanged(w)
 
 	def processActivation(self):
-		print("It's now ", strftime("%c", localtime(time())))
+		Log.i("It's now %s" %(strftime("%c", localtime(time()))))
 
 		t = int(time()) + 1
 
