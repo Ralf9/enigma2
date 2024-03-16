@@ -10,6 +10,7 @@
 		<hardware type="dm920" />
 		<hardware type="one" />
 		<hardware type="two" />
+		<hardware type="seven" />
 	</prerequisites>
 
 	<info>
@@ -26,7 +27,21 @@
 				<satellite type="192" />
 			</prerequisites>
 		</file-->
-		<file type="config" name="settings.rc2" />
+		<file type="config" name="settings.rc2">
+			<prerequisites>
+				<hardware type="dm520" />
+				<hardware type="dm525" />
+				<hardware type="dm900" />
+				<hardware type="dm920" />
+			</prerequisites>
+		</file>
+		<file type="config" name="settings.rc3">
+			<prerequisites>
+				<hardware type="one" />
+				<hardware type="two" />
+				<hardware type="seven" />
+			</prerequisites>
+		</file>
 		<file type="config" name="settings.rec_off">
 			<prerequisites>
 				<hardware type="dm520" />

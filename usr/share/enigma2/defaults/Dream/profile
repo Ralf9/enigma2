@@ -1,0 +1,63 @@
+0.00	Install:reactor
+1.02	Import:enigma,configfile
+1.03	Components.Language:Imports
+1.04	Components.Language:Done
+1.10	Import:Standby
+1.11	Screen:Imports
+1.11	LOAD:ElementTree
+1.13	LOAD:enigma_skin
+1.14	LoadSkin
+1.23	LoadSkinDefault
+1.25	LoadSkinDefaultDone
+1.29	PYTHON_START
+1.30	LOAD:ImageDefaultInstaller
+1.38	LOAD:harddiskmanager
+1.77	LOAD:LANGUAGE
+1.77	LOAD:InfoBar
+1.83	LOAD:enigma
+1.83	LOAD:InfoBarGenerics
+1.85	ChannelSelection:Imports
+1.89	ChannelSelection:Definitions
+1.97	LOAD:InfoBar_Components
+1.99	INIT:config.misc
+2.02	LOAD:EarlyPlugin:Videomode
+2.31	LOAD:EarlyPlugin:UPnP
+2.73	LOAD:EarlyPlugin:NetworkManager
+2.75	LOAD:ScreenGlobals
+3.51	LOAD:Standby,PowerKey,CI, VolumeControl
+3.54	Init:skin
+3.74	Init:InputDevice
+4.00	AVSwitch
+4.02	Init:RecordingConfig, UsageConfig
+4.04	Init:keymapparser, LCD
+4.07	Init:SetupDevices
+4.11	Components.Timezones:Parsing
+4.55	Components.Timezones:Creating
+4.71	Components.Timezones:Callbacks
+5.27	InputDeviceManager:Imports
+5.29	SetupGuide:Imports
+5.30	LOAD:Screens.LangaugeSelection
+5.33	SetupGuide:Done
+5.36	InputDeviceManager:Definitions
+5.37	InputDeviceManager:Plugin
+5.43	Init:CI
+5.44	Init:Navigation
+5.46	Init:Session
+5.49	LOAD:Plugin-SessionStart: 0 /usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager
+5.49	LOAD:Plugin-SessionStart: 0 /usr/lib/enigma2/python/Plugins/Extensions/EPGRefresh
+5.49	LOAD:Plugin-SessionStart: 0 /usr/lib/enigma2/python/Plugins/SystemPlugins/InputDeviceManager
+5.49	LOAD:Plugin-SessionStart: 0 /usr/lib/enigma2/python/Plugins/SystemPlugins/FSBLUpdater
+5.49	LOAD:Plugin-SessionStart: 0 /usr/lib/enigma2/python/Plugins/SystemPlugins/NetworkManager
+5.49	LOAD:Plugin-SessionStart: 0 /usr/lib/enigma2/python/Plugins/Extensions/AutoTimer
+5.50	LOAD:Plugin-SessionStart: 0 /usr/lib/enigma2/python/Plugins/Extensions/MediaScanner
+5.50	LOAD:Plugin-SessionStart: 0 /usr/lib/enigma2/python/Plugins/Extensions/TeleText
+5.52	LOAD:Plugin-SessionStart: 0 /usr/lib/enigma2/python/Plugins/SystemPlugins/UPnP
+5.52	LOAD:Plugin-SessionStart: 0 /usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor
+5.52	LOAD:Plugin-SessionStart: 100 /usr/lib/enigma2/python/Plugins/Extensions/WebInterface
+5.54	LOAD:Plugin-SessionStart: 100 /usr/lib/enigma2/python/Plugins/SystemPlugins/HdmiCec
+5.76	Session:ToastManager, CiHandler
+5.77	Init:screensToRun
+5.78	Init:SetupGuide
+6.15	Init:VolumeControl
+6.19	Init:PowerKey
+6.20	Session:runReactor
