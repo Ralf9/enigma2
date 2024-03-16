@@ -52,7 +52,8 @@ class Log(object):
 			cls = cls.__class__.__name__
 			msg = "%s [%s.%s] :: %s" % (type, cls, func, text)
 		else:
-			msg = "%s [%s] :: %s" % (type, func, text)
+			filename = callframe.f_code.co_filename.split("/")[-1]
+			msg = "%s [%s@%s] :: %s" % (type, func, filename, text)
 
 		if LogConfig.verbose():
 			line = callframe.f_lineno

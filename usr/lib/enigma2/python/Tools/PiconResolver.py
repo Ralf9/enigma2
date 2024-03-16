@@ -14,7 +14,7 @@ class PiconResolver(object):
 				# lookup without path
 				pngname = findPicon('_'.join(x[:10]))
 				if pngname == "":
-					if x[0] in ('4097', '8193'): 
+					if x[0] in ('4097', '8193', '8739'):
 						# lookup 1_* instead of 4097_*
 						pngname = findPicon('1_'+'_'.join(x[1:10]))
 					# DVB-T(2)

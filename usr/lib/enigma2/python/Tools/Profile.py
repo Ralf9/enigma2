@@ -2,8 +2,11 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+from enigma import eLCD
+from Tools.Directories import fileExists, resolveFilename, SCOPE_CONFIG, SCOPE_DEFAULTDIR
+from Tools.Log import Log
+
 import time
-from Tools.Directories import resolveFilename, SCOPE_CONFIG
 
 PERCENTAGE_START = 0
 PERCENTAGE_END = 100
@@ -15,7 +18,11 @@ total_time = 1
 profile_file = None
 
 try:
-	profile_old = open(resolveFilename(SCOPE_CONFIG, "profile"), "r").readlines()
+
+	pfile = resolveFilename(SCOPE_CONFIG, "profile")
+	if not fileExists(pfile):
+		pfile = resolveFilename(SCOPE_DEFAULTDIR, "Dream/profile")
+	profile_old = open(pfile, "r").readlines()
 
 	t = None
 	for line in profile_old:
@@ -41,8 +48,7 @@ def profile(id):
 			perc = t * (PERCENTAGE_END - PERCENTAGE_START) // total_time + PERCENTAGE_START
 			print("profile: %s: %d" % (id, perc))
 			try:
-				with open("/proc/progress", "w") as f:
-					f.write("%d\n" % perc)
+				eLCD.getInstance().setBootProgress(int(perc))
 			except IOError:
 				pass
 
