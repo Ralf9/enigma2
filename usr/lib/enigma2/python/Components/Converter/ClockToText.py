@@ -13,6 +13,7 @@ class ClockToText(Converter, object):
 	FORMAT = 4
 	AS_LENGTH = 5
 	TIMESTAMP = 6
+	AS_LENGTH_WITH_HOURS = 7
 	
 	# add: date, date as string, weekday, ... 
 	# (whatever you need!)
@@ -28,6 +29,8 @@ class ClockToText(Converter, object):
 			self.type = self.DATE
 		elif type == "AsLength":
 			self.type = self.AS_LENGTH
+		elif type == "AsLengthWithHours":
+			self.type = self.AS_LENGTH_WITH_HOURS
 		elif type == "Timestamp":	
 			self.type = self.TIMESTAMP
 			self.isAnimated = False
@@ -49,6 +52,10 @@ class ClockToText(Converter, object):
 			return "%d min" % (time // 60)
 		elif self.type == self.AS_LENGTH:
 			return "%d:%02d" % (time // 60, time % 60)
+		elif self.type == self.AS_LENGTH_WITH_HOURS:
+			if time // 3600 <= 0:
+				return "%d:%02d" % (time // 60, time % 60)
+			return "%d:%02d:%02d" % (time // 3600, (time % 3600) // 60, time % 60)
 		elif self.type == self.TIMESTAMP:
 			return str(time)
 		

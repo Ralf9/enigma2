@@ -6,7 +6,7 @@ class TemplatedMultiContent(StringList):
 	def __init__(self, args):
 		StringList.__init__(self, args)
 		from enigma import eListboxPythonMultiContent, gFont, RT_HALIGN_LEFT, RT_HALIGN_CENTER, RT_HALIGN_RIGHT, RT_VALIGN_TOP, RT_VALIGN_CENTER, RT_VALIGN_BOTTOM, RT_WRAP, \
-							SCALE_ASPECT, SCALE_CENTER, SCALE_FILL, SCALE_HEIGHT, SCALE_NONE, SCALE_STRETCH, SCALE_WIDTH
+							SCALE_ASPECT, SCALE_CENTER, SCALE_FILL, SCALE_HEIGHT, SCALE_NONE, SCALE_STRETCH, SCALE_WIDTH, RT_NO_ELLIPSIS
 		from Components.MultiContent import MultiContentEntryText, MultiContentEntryTextAlphaBlend, MultiContentEntryPixmap, MultiContentEntryPixmapAlphaTest, MultiContentEntryPixmapAlphaBlend, MultiContentTemplateColor, MultiContentEntryProgress, MultiContentEntryProgressPixmap
 		l = locals()
 		del l["self"] # cleanup locals a bit
