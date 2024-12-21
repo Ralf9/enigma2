@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from enigma import eListbox, ePoint
+from enigma import eListbox, ePoint, RADIUS_TYPE_ALL
 from Components.Sources.Source import Source
 from Components.Element import cached
 
@@ -25,6 +25,8 @@ to generate HTML."""
 		self.__mode = eListbox.layoutVertical
 		self.__margin = ePoint(0,0)
 		self.__selectionZoom = 1.0
+		self.__selectionRadius = 0.0
+		self.__selectionRadiusType = RADIUS_TYPE_ALL
 
 	def setList(self, list):
 		self.__list = list
@@ -158,6 +160,15 @@ to generate HTML."""
 			self.changed((self.CHANGED_SPECIFIC, "selectionZoom"))
 
 	selectionZoom = property(lambda self: self.__selectionZoom, setSelectionZoom)
+
+	def setSelectionRadius(self, radius, radiusType=RADIUS_TYPE_ALL, emitChange=True):
+		self.__selectionRadius = radius
+		self.__selectionRadiusType = radiusType
+		if emitChange:
+			self.changed((self.CHANGED_SPECIFIC, "selectionRadius"))
+
+	selectionRadius = property(lambda self: self.__selectionRadius)
+	selectionRadiusType = property(lambda self: self.__selectionRadiusType)
 
 	@property
 	def currentPage(self):
