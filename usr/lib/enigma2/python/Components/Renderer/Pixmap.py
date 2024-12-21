@@ -18,7 +18,7 @@ class Pixmap(Renderer):
 			instance.setDefaultAnimationEnabled(self.source.isAnimated)
 
 	def canPulsate(self):
-		return True
+		return False
 
 	def _doPulsate(self, instance):
 		instance.setPulsate(self._pulsate)

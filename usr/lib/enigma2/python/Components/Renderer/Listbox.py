@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 from Components.Renderer.Renderer import Renderer
 from Components.Sources.Source import Source
-from enigma import eListbox, ePoint
+from enigma import eListbox, ePoint, RADIUS_TYPE_ALL
 
 # the listbox renderer is the listbox, but no listbox content.
 # the content will be provided by the source (or converter).
@@ -26,6 +26,8 @@ class Listbox(Renderer, object):
 		self.__backlogMode = False
 		self.__margin = ePoint(0,0)
 		self.__selectionZoom = 1.0
+		self.__selectionRadius = 0.0
+		self.__selectionRadiusType = RADIUS_TYPE_ALL
 
 	@property
 	def rootSource(self):
@@ -69,6 +71,15 @@ class Listbox(Renderer, object):
 
 	selectionZoom = property(lambda self: self.__selectionZoom, setSelectionZoom)
 
+	def setSelectionRadius(self, radius, radiusType=RADIUS_TYPE_ALL):
+		self.__selectionRadius = radius
+		self.__selectionRadiusType = radiusType
+		if self.instance:
+			self.instance.setSelectionRadius(radius, radiusType)
+
+	selectionRadius = property(lambda self: self.__selectionRadius)
+	selectionRadiusType = property(lambda self: self.__selectionRadiusType)
+
 	def postWidgetCreate(self, instance):
 		if self.__content is not None:
 			instance.setContent(self.__content)
@@ -103,6 +114,8 @@ class Listbox(Renderer, object):
 				source.setMargin(self.margin, False)
 			if hasattr(source, "setSelectionZoom"):
 				source.setSelectionZoom(self.selectionZoom, False)
+			if hasattr(source, "setSelectionRadius"):
+				source.setSelectionRadius(self.__selectionRadius, self.__selectionRadiusType, False)
 
 	def preWidgetRemove(self, instance):
 		instance.setContent(None)
@@ -191,6 +204,8 @@ class Listbox(Renderer, object):
 			self.margin = source.margin
 		if hasattr(source, "selectionZoom"):
 			self.selectionZoom = source.selectionZoom
+		if hasattr(source, "selectionRadius") and hasattr(source, "selectionRadiusType"):
+			self.setSelectionRadius(source.selectionRadius, source.selectionRadiusType)
 		if hasattr(source, "selectionEnabled"):
 			self.selection_enabled = source.selectionEnabled
 		if hasattr(source, "scrollbarMode"):
